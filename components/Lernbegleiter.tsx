@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Hinweis } from "@/components/Bausteine";
+import { Bausteine, Hinweis } from "@/components/Bausteine";
 import { IconSprechblase } from "@/components/Icons";
 import { useWert } from "@/lib/fortschritt";
 import { PHASEN } from "@/lib/inhalte/modul4";
-import { startZustand } from "@/lib/lernbegleiter/phasen";
+import { antwortBausteine, startZustand } from "@/lib/lernbegleiter/phasen";
 import {
   MAX_ZEICHEN,
   type BegleiterAnfrage,
@@ -142,13 +142,18 @@ export function Lernbegleiter({ szenario, entscheidung }: { szenario: SzenarioId
           <label htmlFor="begleiter-antwort" className="sr-only">
             Deine Antwort
           </label>
+          <Bausteine
+            bausteine={laedt || !zustand ? [] : antwortBausteine(szenario, zustand.phase, entscheidung)}
+            label="Antwortbausteine – ein Klick übernimmt den Text, du kannst ihn ergänzen oder ändern:"
+            onWahl={(t) => setEingabe(t)}
+          />
           <textarea
             id="begleiter-antwort"
             rows={3}
             maxLength={MAX_ZEICHEN}
             value={eingabe}
             disabled={laedt || !zustand}
-            placeholder="Antworte in eigenen Worten …"
+            placeholder="Antworte in eigenen Worten oder wähle oben einen Baustein …"
             onChange={(e) => setEingabe(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) senden();

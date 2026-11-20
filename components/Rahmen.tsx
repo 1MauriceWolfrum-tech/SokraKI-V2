@@ -10,7 +10,7 @@ export function Kopfzeile() {
   return (
     <header className="kopfzeile">
       <div className="kopfzeile-innen">
-        <Link href="/" className="marke">
+        <Link href="/" className="marke" aria-label="SokraKI – zur Kursseite">
           <span className="marke-zeichen" aria-hidden="true">
             <IconSprechblase groesse={20} />
           </span>
@@ -21,6 +21,7 @@ export function Kopfzeile() {
         </Link>
         <nav aria-label="Hauptnavigation" className="kopf-nav">
           <Link href="/#lernpfad">Lernpfad</Link>
+          <Link href="/nachschlagen">Nachschlagen</Link>
           {geladen && (
             <span className="kopf-fortschritt" aria-label={`${fertigeModule} von 5 Modulen abgeschlossen`}>
               {fertigeModule}/5 Module

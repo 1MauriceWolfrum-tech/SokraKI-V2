@@ -1,12 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { Hinweis, Quiz, Skala, Textantwort, quizErgebnis } from "@/components/Bausteine";
 import { IconDownload } from "@/components/Icons";
 import { TheseZitat } from "@/components/module/Modul1";
 import type { SchrittDef } from "@/components/module/typen";
 import { hatText, text, useFortschritt, useWert, zahl } from "@/lib/fortschritt";
 import { SKALA } from "@/lib/inhalte/modul1";
-import { ABSCHLUSSTEST, FEEDBACK_AUSSAGEN, KRITERIEN, REFLEXIONSFRAGEN } from "@/lib/inhalte/modul5";
+import { ABSCHLUSSTEST, ERKENNTNISSE, FEEDBACK_AUSSAGEN, KRITERIEN, TRANSFERFRAGE } from "@/lib/inhalte/modul5";
 
 function Position() {
   const { werte } = useFortschritt();
@@ -42,11 +43,34 @@ function Position() {
 
 function Reflexion() {
   const [kriterien, setKriterien] = useWert<boolean[]>("m5:kriterien", KRITERIEN.map(() => false));
+  const [erkenntnisse, setErkenntnisse] = useWert<number[]>("m5:erkenntnisse", []);
   return (
     <>
-      {REFLEXIONSFRAGEN.map((f) => (
-        <Textantwort key={f.id} schluessel={`m5:${f.id}`} label={f.frage} mindestens={40} zeilen={3} />
-      ))}
+      <fieldset className="quiz-frage">
+        <legend>
+          Welche Erkenntnisse nimmst du aus dem Kurs mit?
+          <span className="hilfe hilfe-block">Wähle bis zu drei Aussagen – hier gibt es kein Richtig oder Falsch.</span>
+        </legend>
+        <div className="bausteine-liste">
+          {ERKENNTNISSE.map((e, i) => {
+            const aktiv = erkenntnisse.includes(i);
+            return (
+              <button
+                key={e}
+                type="button"
+                className="baustein"
+                aria-pressed={aktiv}
+                disabled={!aktiv && erkenntnisse.length >= 3}
+                onClick={() => setErkenntnisse(aktiv ? erkenntnisse.filter((j) => j !== i) : [...erkenntnisse, i])}
+              >
+                {aktiv ? "✓ " : ""}
+                {e}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+      <Textantwort schluessel="m5:r3" label={TRANSFERFRAGE} hilfe="Zwei bis drei Sätze genügen." mindestens={40} zeilen={3} />
       <fieldset className="checkliste">
         <legend>Prüfe deine Antworten: Was macht eine gute Begründung aus?</legend>
         {KRITERIEN.map((k, i) => (
@@ -60,6 +84,10 @@ function Reflexion() {
           </label>
         ))}
       </fieldset>
+      <Hinweis art="info">
+        <strong>Für deinen Unterricht:</strong> Unter <Link href="/nachschlagen">Nachschlagen</Link> findest du den
+        KI-Gerechtigkeitskompass, DigCompEdu, eine Anleitung für den sokratischen Dialog mit KI und Prompts zum Kopieren.
+      </Hinweis>
     </>
   );
 }
@@ -69,12 +97,12 @@ function Test() {
   const ergebnis = quizErgebnis(werte, ABSCHLUSSTEST, "m5:test");
   return (
     <>
-      <p>Fünf Fragen – nicht nur Begriffe, sondern auch kleine Anwendungssituationen.</p>
+      <p>Sieben Fragen – nicht nur Begriffe, sondern auch kleine Anwendungssituationen.</p>
       <Quiz fragen={ABSCHLUSSTEST} praefix="m5:test" />
       {ergebnis.alle && (
-        <Hinweis art={ergebnis.richtig >= 4 ? "erfolg" : "info"}>
+        <Hinweis art={ergebnis.richtig >= 5 ? "erfolg" : "info"}>
           {ergebnis.richtig} von {ABSCHLUSSTEST.length} Fragen richtig.{" "}
-          {ergebnis.richtig >= 4
+          {ergebnis.richtig >= 5
             ? "Du hast die Grundlagen sicher verstanden."
             : "Wirf bei Bedarf noch einmal einen Blick in Modul 2."}
         </Hinweis>
@@ -135,7 +163,7 @@ export const MODUL5: SchrittDef[] = [
     id: "reflexion",
     titel: "Reflexion",
     Inhalt: Reflexion,
-    fertig: (w) => REFLEXIONSFRAGEN.every((f) => hatText(w, `m5:${f.id}`, 40)),
+    fertig: (w) => hatText(w, "m5:r3", 40),
   },
   { id: "test", titel: "Abschlusstest", Inhalt: Test, fertig: (w) => quizErgebnis(w, ABSCHLUSSTEST, "m5:test").alle },
   {

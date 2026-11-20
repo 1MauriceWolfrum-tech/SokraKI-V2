@@ -1,9 +1,18 @@
 "use client";
 
-import { Hinweis, Impuls, Textantwort } from "@/components/Bausteine";
+import {
+  Hinweis,
+  Impuls,
+  Mehrfachauswahl,
+  Quiz,
+  Textantwort,
+  auswahlGeprueft,
+  quizErgebnis,
+} from "@/components/Bausteine";
 import type { SchrittDef } from "@/components/module/typen";
 import { hatText, useFortschritt, useWert, zahl } from "@/lib/fortschritt";
-import { FALL_A, FALL_B, type OptionId } from "@/lib/inhalte/modul3";
+import { FALL_A, FALL_B, type OptionId, type Person } from "@/lib/inhalte/modul3";
+import type { Werte } from "@/lib/typen";
 
 function Situation({ absaetze }: { absaetze: string[] }) {
   return (
@@ -23,7 +32,7 @@ function FallA() {
     <>
       <p className="chip chip-hellblau">BWL · {FALL_A.thema}</p>
       <Situation absaetze={FALL_A.situation} />
-      <div className="tabelle-rahmen">
+      <div className="tabelle-rahmen tabelle-zahlen">
         <table>
           <caption>Vorliegende Angebote für 200 Bürostühle</caption>
           <thead>
@@ -50,7 +59,7 @@ function FallA() {
       </div>
 
       <h3 className="abstand-gross">Aufgabe 1: Entscheidung treffen</h3>
-      <p>Wie sollte die Lehrkraft vorgehen? Wähle eine Option und begründe deine Entscheidung.</p>
+      <p>Wie sollte die Lehrkraft vorgehen? Wähle eine Option.</p>
       <div className="optionen" role="radiogroup" aria-label="Vorgehensweise wählen">
         {FALL_A.optionen.map((o) => (
           <button
@@ -70,33 +79,53 @@ function FallA() {
           </button>
         ))}
       </div>
-      <Textantwort schluessel="m3:a:begruendung" label="Begründe deine Entscheidung." mindestens={60} />
-      <Impuls freigabe={option !== null && hatText(werte, "m3:a:begruendung", 60)} titel="Impulse zu allen drei Optionen">
-        <dl className="impuls-liste">
-          {FALL_A.optionen.map((o) => (
-            <div key={o.id} className={option === o.id ? "eigene-wahl" : ""}>
-              <dt>
-                Option {o.id}: {o.titel}
-                {option === o.id && <span className="chip chip-flieder">deine Wahl</span>}
-              </dt>
-              <dd>{o.impuls}</dd>
-            </div>
-          ))}
-        </dl>
-      </Impuls>
+
+      {option && (
+        <>
+          <h3 className="abstand-gross">Aufgabe 2: Entscheidung begründen</h3>
+          <Mehrfachauswahl
+            schluessel="m3:a:gruende"
+            frage={`Welche Begründungen stützen deine Wahl (Option ${option})?`}
+            hilfe="Wähle alle Aussagen, die zu deiner Entscheidung passen, und prüfe dann deine Auswahl."
+            aussagen={FALL_A.begruendungen}
+          />
+          {auswahlGeprueft(werte, "m3:a:gruende") && (
+            <>
+              <Textantwort
+                schluessel="m3:a:begruendung"
+                label="Möchtest du etwas ergänzen? (optional)"
+                hilfe="Zum Beispiel einen Gedanken, der in der Auswahl fehlt."
+                mindestens={0}
+                zeilen={2}
+              />
+              <Impuls freigabe titel="Impulse zu allen drei Optionen">
+                <dl className="impuls-liste">
+                  {FALL_A.optionen.map((o) => (
+                    <div key={o.id} className={option === o.id ? "eigene-wahl" : ""}>
+                      <dt>
+                        Option {o.id}: {o.titel}
+                        {option === o.id && <span className="chip chip-flieder">deine Wahl</span>}
+                      </dt>
+                      <dd>{o.impuls}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Impuls>
+            </>
+          )}
+        </>
+      )}
     </>
   );
 }
 
 function FallAReflexion() {
   const { werte } = useFortschritt();
-  const fertig = FALL_A.reflexionsfragen.every((_, i) => hatText(werte, `m3:a:r${i + 1}`, 20));
+  const fertig = quizErgebnis(werte, FALL_A.reflexion, "m3:a:quiz").alle;
   return (
     <>
-      <p>Prüfe deine Entscheidung aus vier Blickwinkeln. Kurze, präzise Antworten genügen.</p>
-      {FALL_A.reflexionsfragen.map((f, i) => (
-        <Textantwort key={f} schluessel={`m3:a:r${i + 1}`} label={f} mindestens={20} zeilen={3} />
-      ))}
+      <p>Prüfe deine Entscheidung aus vier Blickwinkeln. Wähle jeweils die Antwort, die du für am treffendsten hältst.</p>
+      <Quiz fragen={FALL_A.reflexion} praefix="m3:a:quiz" />
       {fertig && (
         <Hinweis art="info">
           <strong>Didaktisches Ziel:</strong> {FALL_A.ziel} Diese Fragen greift der KI-Lernbegleiter in Modul 4 wieder
@@ -107,11 +136,20 @@ function FallAReflexion() {
   );
 }
 
-function ChatAuszug({ chat }: { chat: (typeof FALL_B.chats)[number] }) {
+function ChatAuszug({ chat, urteil }: { chat: (typeof FALL_B.chats)[number]; urteil: boolean }) {
+  const gut = chat.id === "sara";
   return (
     <figure className="chat-auszug">
       <figcaption>
         <strong>{chat.person}</strong> {chat.beschreibung}
+        {urteil && (
+          <>
+            {" "}
+            <span className={`urteil ${gut ? "urteil-gut" : "urteil-schwach"}`}>
+              {gut ? "sokratisch · lernförderlich" : "nicht sokratisch · wenig lernförderlich"}
+            </span>
+          </>
+        )}
       </figcaption>
       {chat.verlauf.map((n, i) => (
         <p key={i} className={`chat-zeile ${n.von === "ki" ? "chat-ki" : "chat-lernend"}`}>
@@ -123,28 +161,97 @@ function ChatAuszug({ chat }: { chat: (typeof FALL_B.chats)[number] }) {
   );
 }
 
+function merkmaleKomplett(w: Werte): boolean {
+  return FALL_B.merkmale.every((m) => typeof w[`m3:b:merkmal:${m.id}`] === "string");
+}
+
 function FallB() {
-  const { werte } = useFortschritt();
+  const { werte, setze } = useFortschritt();
+  const komplett = merkmaleKomplett(werte);
   return (
     <>
       <p className="chip chip-lindgruen">Mathematik · {FALL_B.thema}</p>
       <Situation absaetze={FALL_B.situation} />
       <div className="chat-vergleich">
         {FALL_B.chats.map((c) => (
-          <ChatAuszug key={c.person} chat={c} />
+          <ChatAuszug key={c.id} chat={c} urteil={komplett} />
         ))}
       </div>
+
       <h3 className="abstand-gross">Aufgabe 1: Analyse</h3>
-      <Textantwort schluessel="m3:b:analyse" label={FALL_B.analyseFrage} mindestens={60} />
-      <Impuls freigabe={hatText(werte, "m3:b:analyse", 60)}>
-        <p>{FALL_B.analyseImpuls}</p>
-      </Impuls>
+      <p>
+        Ein sokratischer Dialog führt durch gezielte Fragen zur eigenen Erkenntnis, statt fertige Lösungen zu liefern.
+        In welchem Chat zeigt sich das jeweilige Merkmal? Die Rückmeldung erscheint sofort.
+      </p>
+      <ol className="zuordnung">
+        {FALL_B.merkmale.map((m) => {
+          const wahl = werte[`m3:b:merkmal:${m.id}`] as Person | undefined;
+          return (
+            <li key={m.id} className="zuordnung-eintrag">
+              <p>{m.text}</p>
+              <div className="zuordnung-wahl" role="radiogroup" aria-label={`Chat für: ${m.text}`}>
+                {FALL_B.chats.map((c) => {
+                  const status = wahl ? (c.id === m.loesung ? "richtig" : wahl === c.id ? "falsch" : "") : "";
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={wahl === c.id}
+                      disabled={wahl !== undefined}
+                      className={`pille ${status}`}
+                      onClick={() => setze(`m3:b:merkmal:${m.id}`, c.id)}
+                    >
+                      Chat von {c.person}
+                    </button>
+                  );
+                })}
+              </div>
+              {wahl && (
+                <p className={`rueckmeldung ${wahl === m.loesung ? "rueckmeldung-gut" : "rueckmeldung-hinweis"}`}>
+                  {m.erklaerung}
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+
+      {komplett && (
+        <>
+          <h3 className="abstand-gross">Auflösung: Welcher Chat ist besser – und warum?</h3>
+          <div className="tabelle-rahmen">
+            <table>
+              <caption>Die beiden Chats im Vergleich mit den Merkmalen des sokratischen Dialogs</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Merkmal</th>
+                  <th scope="col">Ben</th>
+                  <th scope="col">Sara</th>
+                </tr>
+              </thead>
+              <tbody>
+                {FALL_B.vergleich.map((v) => (
+                  <tr key={v.kriterium}>
+                    <th scope="row">{v.kriterium}</th>
+                    <td>{v.ben}</td>
+                    <td>{v.sara}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Hinweis art="erfolg">{FALL_B.fazit}</Hinweis>
+          <p className="hilfe">Was einen sokratischen Dialog genau ausmacht, vertiefst du in Modul 4.</p>
+        </>
+      )}
     </>
   );
 }
 
 function FallBBewertung() {
   const [bewertung, setBewertung] = useWert<number | null>("m3:b:bewertung", null);
+  const [check, setCheck] = useWert<boolean[]>("m3:b:selbstcheck", FALL_B.selbstcheck.map(() => false));
   const { werte } = useFortschritt();
   return (
     <>
@@ -165,26 +272,39 @@ function FallBBewertung() {
           </button>
         ))}
       </div>
-      <Textantwort schluessel="m3:b:bewertung-text" label="Begründe deine Bewertung." mindestens={40} zeilen={3} />
-      <Impuls freigabe={bewertung !== null && hatText(werte, "m3:b:bewertung-text", 40)}>
-        <p>{FALL_B.aussageImpuls}</p>
-      </Impuls>
+      {bewertung !== null && <Quiz fragen={[FALL_B.argument]} praefix="m3:b" />}
 
       <h3 className="abstand-gross">Aufgabe 3: Handlungsempfehlung</h3>
-      <p>{FALL_B.massnahmenFrage}</p>
-      <Textantwort schluessel="m3:b:massnahme1" label="Maßnahme 1" mindestens={30} zeilen={2} />
-      <Textantwort schluessel="m3:b:massnahme2" label="Maßnahme 2" mindestens={30} zeilen={2} />
-      <Impuls
-        freigabe={hatText(werte, "m3:b:massnahme1", 30) && hatText(werte, "m3:b:massnahme2", 30)}
-        titel="Mit Beispielen vergleichen"
-      >
-        <p>Mögliche Maßnahmen, die andere vorgeschlagen haben:</p>
-        <ul>
-          {FALL_B.massnahmenImpuls.map((m) => (
-            <li key={m}>{m}</li>
+      <Textantwort
+        schluessel="m3:b:empfehlung"
+        label={FALL_B.empfehlungFrage}
+        hilfe="Zwei bis vier Sätze genügen."
+        mindestens={60}
+        zeilen={4}
+      />
+      <Impuls freigabe={hatText(werte, "m3:b:empfehlung", 60)} titel="Mit der Musterlösung vergleichen">
+        <p>
+          <strong>Musterlösung</strong>
+        </p>
+        {FALL_B.musterloesung.map((m) => (
+          <p key={m}>{m}</p>
+        ))}
+        <fieldset className="checkliste abstand">
+          <legend>Selbstcheck: Was steckt in deiner Empfehlung?</legend>
+          {FALL_B.selbstcheck.map((k, i) => (
+            <label key={k} className="checkliste-zeile">
+              <input
+                type="checkbox"
+                checked={check[i] ?? false}
+                onChange={(e) => setCheck(check.map((v, j) => (j === i ? e.target.checked : v)))}
+              />
+              {k}
+            </label>
           ))}
-        </ul>
-        <p>Wie die KI schrittweise hilft, ohne die eigene Problemlösung zu ersetzen, klärst du in Modul 4.</p>
+        </fieldset>
+        <p className="hilfe">
+          Fehlt etwas? Ergänze deine Empfehlung oben – sie fließt in das Gespräch mit dem Lernbegleiter in Modul 4 ein.
+        </p>
       </Impuls>
     </>
   );
@@ -195,19 +315,19 @@ export const MODUL3: SchrittDef[] = [
     id: "fall-a",
     titel: "Fall A: Entscheidung treffen",
     Inhalt: FallA,
-    fertig: (w) => typeof w["m3:a:option"] === "string" && hatText(w, "m3:a:begruendung", 60),
+    fertig: (w) => typeof w["m3:a:option"] === "string" && auswahlGeprueft(w, "m3:a:gruende"),
   },
   {
     id: "fall-a-reflexion",
     titel: "Fall A: Entscheidung reflektieren",
     Inhalt: FallAReflexion,
-    fertig: (w) => FALL_A.reflexionsfragen.every((_, i) => hatText(w, `m3:a:r${i + 1}`, 20)),
+    fertig: (w) => quizErgebnis(w, FALL_A.reflexion, "m3:a:quiz").alle,
   },
   {
     id: "fall-b",
-    titel: "Fall B: Analyse",
+    titel: "Fall B: Zwei Chats analysieren",
     Inhalt: FallB,
-    fertig: (w) => hatText(w, "m3:b:analyse", 60),
+    fertig: merkmaleKomplett,
   },
   {
     id: "fall-b-bewertung",
@@ -215,8 +335,7 @@ export const MODUL3: SchrittDef[] = [
     Inhalt: FallBBewertung,
     fertig: (w) =>
       zahl(w, "m3:b:bewertung") !== null &&
-      hatText(w, "m3:b:bewertung-text", 40) &&
-      hatText(w, "m3:b:massnahme1", 30) &&
-      hatText(w, "m3:b:massnahme2", 30),
+      quizErgebnis(w, [FALL_B.argument], "m3:b").alle &&
+      hatText(w, "m3:b:empfehlung", 60),
   },
 ];

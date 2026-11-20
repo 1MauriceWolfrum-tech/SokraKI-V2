@@ -1,12 +1,33 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import { Hinweis, Impuls, Textantwort } from "@/components/Bausteine";
+import { Hinweis, Impuls, Kopierfeld, Textantwort } from "@/components/Bausteine";
 import { IconDownload } from "@/components/Icons";
 import type { SchrittDef } from "@/components/module/typen";
 import { hatText, text, useFortschritt, useWert } from "@/lib/fortschritt";
-import { CHECKLISTE, SCHWACHSTELLEN, THEMEN, VERANTWORTUNGSFRAGE, VERANTWORTUNGS_IMPULS } from "@/lib/inhalte/bonus";
-import { MAX_ZEICHEN, type ArbeitsblattAntwort, type KiModus, type ThemaId, type Werte } from "@/lib/typen";
+import {
+  CHECKLISTE,
+  PLANUNG,
+  SCHWACHSTELLEN,
+  THEMEN,
+  VERANTWORTUNGSFRAGE,
+  VERANTWORTUNGS_IMPULS,
+  arbeitsblattPrompt,
+  planBausteine,
+  planBeantwortet,
+  planText,
+  planungsPromptExtern,
+  type PlanAntwort,
+} from "@/lib/inhalte/bonus";
+import {
+  MAX_PROMPT_ZEICHEN,
+  MAX_ZEICHEN,
+  type ArbeitsblattAntwort,
+  type KiModus,
+  type ThemaId,
+  type Werte,
+} from "@/lib/typen";
 
 type Bewertung = { wert: "ja" | "teilweise" | "nein" | ""; notiz: string };
 type Schwachstelle = { problem: string; vorschlag: string };
@@ -25,17 +46,131 @@ function Entwurf() {
   );
 }
 
-function Generieren() {
+function planAntworten(w: Werte): (PlanAntwort | undefined)[] {
+  return PLANUNG.map((p) => w[`bonus:plan:${p.id}`] as PlanAntwort | undefined);
+}
+
+function planungFertig(w: Werte): boolean {
+  return typeof w["bonus:thema"] === "string" && planAntworten(w).every(planBeantwortet);
+}
+
+function Planen() {
   const [thema, setThema] = useWert<ThemaId | null>("bonus:thema", null);
-  const [prompt, setPrompt] = useWert<string>("bonus:prompt", "");
   const { werte, setze } = useFortschritt();
+  const antworten = planAntworten(werte);
+  // Die nächste Frage erscheint erst, wenn die vorherige beantwortet ist.
+  const sichtbar = thema ? Math.min(PLANUNG.length, antworten.findIndex((a) => !planBeantwortet(a)) + 1 || PLANUNG.length) : 0;
+
+  function waehle(t: ThemaId) {
+    if (t === thema) return;
+    setThema(t);
+    for (const p of PLANUNG) setze(`bonus:plan:${p.id}`, { wahl: [], eigen: "" });
+    setze("bonus:prompt", "");
+  }
+
+  function aendere(i: number, neu: Partial<PlanAntwort>) {
+    const alt = antworten[i] ?? { wahl: [], eigen: "" };
+    setze(`bonus:plan:${PLANUNG[i].id}`, { ...alt, ...neu });
+    setze("bonus:prompt", "");
+  }
+
+  return (
+    <>
+      <p>
+        Bevor eine KI ein Arbeitsblatt schreibt, planst du es selbst – im sokratischen Dialog. Der Coach stellt dir vier
+        Fragen, du entscheidest. Aus deinen Antworten entsteht ein strukturierter Prompt.
+      </p>
+      <div className="optionen" role="radiogroup" aria-label="Thema wählen">
+        {(Object.keys(THEMEN) as ThemaId[]).map((t) => (
+          <button
+            key={t}
+            type="button"
+            role="radio"
+            aria-checked={thema === t}
+            className="option-karte"
+            onClick={() => waehle(t)}
+          >
+            <span className="option-buchstabe">{t === "bwl" ? "€" : "f(x)"}</span>
+            <span>
+              <strong>{THEMEN[t].titel}</strong>
+              <br />
+              <span className="hilfe">für {THEMEN[t].zielgruppe}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {thema && (
+        <div className="planung" aria-live="polite">
+          {PLANUNG.slice(0, sichtbar).map((p, i) => {
+            const a = antworten[i] ?? { wahl: [], eigen: "" };
+            const vorher = i > 0 ? planText(i - 1, thema, antworten[i - 1]).split("; ")[0] : "";
+            return (
+              <div key={p.id} className="planung-frage">
+                <div className="nachricht nachricht-begleiter">
+                  <span className="nachricht-wer">Coach · Frage {i + 1} von {PLANUNG.length}</span>
+                  <p>
+                    {vorher && <>Du hast notiert: „{vorher}“. </>}
+                    {p.frage}
+                  </p>
+                </div>
+                <div className="bausteine">
+                  <p className="hilfe">Wähle passende Bausteine (mehrere möglich) und ergänze bei Bedarf:</p>
+                  <div className="bausteine-liste">
+                    {planBausteine(i, thema).map((b, j) => {
+                      const aktiv = a.wahl.includes(j);
+                      return (
+                        <button
+                          key={b}
+                          type="button"
+                          className="baustein"
+                          aria-pressed={aktiv}
+                          onClick={() => aendere(i, { wahl: aktiv ? a.wahl.filter((k) => k !== j) : [...a.wahl, j] })}
+                        >
+                          {aktiv ? "✓ " : ""}
+                          {b}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <label className="sr-only" htmlFor={`plan-${p.id}`}>
+                  Eigene Ergänzung zu Frage {i + 1}
+                </label>
+                <input
+                  id={`plan-${p.id}`}
+                  type="text"
+                  maxLength={200}
+                  placeholder="Eigene Ergänzung (optional)"
+                  value={a.eigen}
+                  onChange={(e) => aendere(i, { eigen: e.target.value })}
+                />
+              </div>
+            );
+          })}
+          {planungFertig(werte) && (
+            <Hinweis art="erfolg">
+              Deine Planung steht. Im nächsten Schritt wird daraus ein strukturierter Prompt mit vorgegebenem Denkweg
+              (Chain of Thought).
+            </Hinweis>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
+function Generieren() {
+  const { werte, setze } = useFortschritt();
+  const thema = werte["bonus:thema"] as ThemaId | undefined;
+  const geplant = thema ? arbeitsblattPrompt(thema, planAntworten(werte)) : "";
+  const gespeichert = text(werte, "bonus:prompt");
+  const prompt = gespeichert || geplant;
+  const setPrompt = (p: string) => setze("bonus:prompt", p);
   const [laedt, setLaedt] = useState(false);
   const [hinweis, setHinweis] = useState<string | null>(null);
 
-  function waehle(t: ThemaId) {
-    setThema(t);
-    setPrompt(THEMEN[t].prompt);
-  }
+  if (!thema) return <Hinweis art="warnung">Plane zuerst im vorherigen Schritt dein Arbeitsblatt.</Hinweis>;
 
   async function erzeugen() {
     if (!thema) return;
@@ -62,48 +197,51 @@ function Generieren() {
 
   return (
     <>
-      <p>Wähle ein Unterrichtsthema und gib der KI einen Arbeitsauftrag. Den Vorschlag kannst du anpassen.</p>
-      <div className="optionen" role="radiogroup" aria-label="Thema wählen">
-        {(Object.keys(THEMEN) as ThemaId[]).map((t) => (
-          <button
-            key={t}
-            type="button"
-            role="radio"
-            aria-checked={thema === t}
-            className="option-karte"
-            onClick={() => waehle(t)}
-          >
-            <span className="option-buchstabe">{t === "bwl" ? "€" : "f(x)"}</span>
-            <span>
-              <strong>{THEMEN[t].titel}</strong>
-              <br />
-              <span className="hilfe">für {THEMEN[t].zielgruppe}</span>
-            </span>
-          </button>
-        ))}
+      <p>
+        Aus deiner Planung ist ein strukturierter Prompt entstanden: Rolle, Auftrag, Lerngruppe und ein vorgegebener
+        Denkweg in fünf Schritten (<strong>Chain of Thought</strong>). So arbeitet die KI nachvollziehbarer, statt
+        sprunghaft zu antworten. Du kannst den Prompt anpassen.
+      </p>
+      <div className="feld">
+        <label htmlFor="bonus-prompt">Dein Arbeitsauftrag an die KI</label>
+        <textarea
+          id="bonus-prompt"
+          rows={16}
+          maxLength={MAX_PROMPT_ZEICHEN}
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+        />
       </div>
-      {thema && (
-        <>
-          <div className="feld">
-            <label htmlFor="bonus-prompt">Dein Arbeitsauftrag an die KI</label>
-            <textarea
-              id="bonus-prompt"
-              rows={5}
-              maxLength={MAX_ZEICHEN}
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-            />
-          </div>
-          <button
-            type="button"
-            className="knopf knopf-primaer"
-            disabled={laedt || prompt.trim().length < 20}
-            onClick={erzeugen}
-          >
-            {laedt ? "Entwurf wird erzeugt …" : "Entwurf erzeugen"}
+      <div className="impuls-start">
+        <button
+          type="button"
+          className="knopf knopf-primaer"
+          disabled={laedt || prompt.trim().length < 20}
+          onClick={erzeugen}
+        >
+          {laedt ? "Entwurf wird erzeugt …" : "Entwurf erzeugen"}
+        </button>
+        {gespeichert && gespeichert !== geplant && (
+          <button type="button" className="knopf-text" onClick={() => setPrompt("")}>
+            Auf den Prompt aus der Planung zurücksetzen
           </button>
-        </>
+        )}
+      </div>
+      {werte["bonus:quelle"] !== "claude" && (
+        <p className="hilfe">
+          Ohne KI-Zugang zeigt der Kurs einen vorbereiteten Beispielentwurf mit typischen Schwachstellen – genau die
+          Art Fehler, die auch ein guter Prompt nicht ausschließt.
+        </p>
       )}
+      <details className="aufklapp">
+        <summary>Prompts für deine eigene KI zum Kopieren</summary>
+        <Kopierfeld titel="Arbeitsblatt-Prompt (Chain of Thought)" text={prompt} />
+        <Kopierfeld titel="Sokratischer Planungs-Prompt: Die KI fragt, du planst" text={planungsPromptExtern(thema)} />
+        <p className="hilfe">
+          Gib in externe KI-Dienste keine personenbezogenen Daten ein. Mehr dazu unter{" "}
+          <Link href="/nachschlagen#anleitung">Nachschlagen</Link>.
+        </p>
+      </details>
       {hinweis && <Hinweis art="warnung">{hinweis}</Hinweis>}
       {text(werte, "bonus:entwurf") && (
         <div className="abstand-gross">
@@ -270,6 +408,7 @@ function Reflexion() {
 }
 
 export const BONUS: SchrittDef[] = [
+  { id: "planen", titel: "Arbeitsblatt sokratisch planen", Inhalt: Planen, fertig: planungFertig },
   { id: "generieren", titel: "Arbeitsblatt generieren", Inhalt: Generieren, fertig: (w) => hatText(w, "bonus:entwurf", 1) },
   {
     id: "pruefen",

@@ -20,6 +20,9 @@ export type QuizFrage = {
   optionen: { text: string; richtig?: boolean; feedback: string }[];
 };
 
+// Aussage für eine Mehrfachauswahl mit Selbstkontrolle.
+export type Auswahlaussage = { text: string; bewertung: "tragfaehig" | "eingeschraenkt" | "kurz"; feedback: string };
+
 export type KiModus = "skript" | "claude";
 
 // KI-Lernbegleiter (Modul 4)
@@ -53,3 +56,5 @@ export type ArbeitsblattAntwort = { entwurf: string; modus: KiModus; hinweis?: s
 // Obergrenzen für Anfragen an die KI-Schnittstellen.
 export const MAX_ZEICHEN = 2000;
 export const MAX_BEITRAEGE = 24;
+// Der Arbeitsblatt-Prompt aus der sokratischen Planung ist länger als eine Chat-Antwort.
+export const MAX_PROMPT_ZEICHEN = 4000;

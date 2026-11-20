@@ -1,5 +1,5 @@
 import type { GespraechsZustand, SzenarioId } from "@/lib/typen";
-import { ABSCHLUSS, NACHHAKEN, SKRIPT } from "@/lib/inhalte/modul4";
+import { ABSCHLUSS, ANTWORTBAUSTEINE, NACHHAKEN, SKRIPT } from "@/lib/inhalte/modul4";
 import type { OptionId } from "@/lib/inhalte/modul3";
 
 // Gesprächssteuerung nach dem 5-Phasen-Leitfaden. Die App legt die Phase fest, nicht das Sprachmodell.
@@ -40,6 +40,13 @@ export function skriptFrage(szenario: SzenarioId, phase: number, entscheidung: s
   const option = optionAus(entscheidung);
   if (szenario === "a" && phase === 2 && s.annahmen) return s.annahmen[option];
   return s.phasen[phase - 1].replace("{option}", option);
+}
+
+// Antwortbausteine zur aktuellen Phase (zum Anklicken und Ergänzen).
+export function antwortBausteine(szenario: SzenarioId, phase: number, entscheidung: string): string[] {
+  const b = ANTWORTBAUSTEINE[szenario];
+  if (szenario === "a" && phase === 2 && b.annahmen) return b.annahmen[optionAus(entscheidung)];
+  return b.phasen[phase - 1] ?? [];
 }
 
 export function skriptText(szenario: SzenarioId, schritt: Schritt, entscheidung: string): string {

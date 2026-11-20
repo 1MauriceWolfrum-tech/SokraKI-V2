@@ -1317,6 +1317,11 @@ td {
   text-align: left;
   padding: 0.55rem 1rem;
   border-top: 1px solid var(--rand);
+  vertical-align: top;
+}
+
+.tabelle-zahlen th,
+.tabelle-zahlen td {
   white-space: nowrap;
 }
 
@@ -1882,5 +1887,285 @@ thead th {
 
   .urkunde {
     margin: 0;
+  }
+}
+
+/* V2.1: Mehrfachauswahl, Kopierfeld, Antwortbausteine, Vergleich, Nachschlagen */
+.hilfe-block {
+  display: block;
+  margin-top: 0.3rem;
+  font-weight: 400;
+}
+
+.knopf-klein {
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.kopierfeld {
+  margin: 1rem 0;
+  border: 1px solid var(--hellblau);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.kopierfeld figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--hellblau-zart);
+  padding: 0.55rem 0.9rem 0.55rem 1rem;
+  font-weight: 700;
+  color: var(--violett);
+  font-size: 0.9rem;
+}
+
+.kopierfeld pre {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.bausteine {
+  margin: 0.4rem 0 0.8rem;
+}
+
+.bausteine .hilfe {
+  margin-bottom: 0.4rem;
+}
+
+.bausteine-liste {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.baustein {
+  text-align: left;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  padding: 0.5rem 0.8rem;
+  border: 1.5px dashed var(--flieder);
+  border-radius: 12px;
+  background: var(--flieder-zart);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.baustein:hover {
+  border-color: var(--violett);
+  border-style: solid;
+}
+
+.baustein[aria-pressed="true"] {
+  border-style: solid;
+  border-color: var(--violett);
+  background: var(--violett-zart);
+}
+
+.urteil {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+}
+
+.urteil-gut {
+  background: #ecf8f1;
+  color: #1d5e33;
+}
+
+.urteil-schwach {
+  background: var(--risiko-zart);
+  color: #8c2f26;
+}
+
+.prozess {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+  counter-reset: prozess;
+}
+
+.prozess li {
+  position: relative;
+  border: 1px solid var(--hellblau);
+  border-radius: 16px;
+  padding: 0.8rem 0.9rem;
+  font-size: 0.93rem;
+  background: #fff;
+}
+
+.prozess li::before {
+  counter-increment: prozess;
+  content: counter(prozess);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 0.4rem;
+  border-radius: 50%;
+  background: var(--violett);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.prozess strong {
+  display: block;
+  color: var(--violett);
+}
+
+.vertrauensskala {
+  margin: 1rem 0 1.5rem;
+}
+
+.vertrauensskala-balken {
+  height: 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3b5bdb 0%, #9be36c 50%, #b23a2a 100%);
+}
+
+.vertrauensskala-beschriftung {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.vertrauensskala-beschriftung span:nth-child(2) {
+  text-align: center;
+  font-weight: 700;
+  color: var(--gruen);
+}
+
+.vertrauensskala-beschriftung span:last-child {
+  text-align: right;
+}
+
+.kompass-liste {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.kompass-liste li {
+  border: 1px solid var(--rand);
+  border-left: 4px solid var(--violett);
+  border-radius: 0 14px 14px 0;
+  padding: 0.7rem 1rem;
+}
+
+.kompass-liste p {
+  margin: 0.2rem 0 0;
+  font-size: 0.93rem;
+}
+
+.inhaltsliste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0;
+  list-style: none;
+  margin: 0 0 2rem;
+}
+
+.inhaltsliste a {
+  display: inline-block;
+  border: 1.5px solid var(--rand);
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.inhaltsliste a:hover {
+  border-color: var(--violett);
+}
+
+.abschnitt {
+  margin-bottom: 2.5rem;
+  scroll-margin-top: 90px;
+}
+
+.planung {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.planung-frage {
+  border: 1px solid var(--hellblau);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+
+.planung-frage .nachricht-wer {
+  display: block;
+}
+
+.planung-frage textarea,
+.planung-frage input {
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .prozess {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .prozess {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vertrauensskala-beschriftung {
+    font-size: 0.78rem;
+  }
+}
+
+/* Kopfzeile auf schmalen Bildschirmen: drei Navigationspunkte müssen neben die Marke passen. */
+@media (max-width: 560px) {
+  .kopfzeile-innen {
+    padding-inline: 1rem;
+    gap: 0.6rem;
+  }
+
+  .marke-unterzeile {
+    display: none;
+  }
+
+  .kopf-nav {
+    gap: 0.7rem;
+    font-size: 0.88rem;
+  }
+
+  .kopf-fortschritt {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .marke-text {
+    display: none;
   }
 }

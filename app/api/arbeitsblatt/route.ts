@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { KI_MODUS, fehlerHinweis, frageClaude } from "@/lib/ki/client";
 import { ENTWUERFE, THEMEN } from "@/lib/inhalte/bonus";
-import { MAX_ZEICHEN, type ArbeitsblattAnfrage, type ArbeitsblattAntwort } from "@/lib/typen";
+import { MAX_PROMPT_ZEICHEN, type ArbeitsblattAnfrage, type ArbeitsblattAntwort } from "@/lib/typen";
 
 // Erzeugt einen Arbeitsblatt-Entwurf: ohne KI-Zugang ein vorbereiteter Entwurf, sonst über Claude.
 
 const SYSTEM = `Du erstellst Entwürfe für Arbeitsblätter für den Unterricht an beruflichen Schulen in Deutschland.
-Halte dich an den Auftrag der Lehrkraft. Schreibe reinen Text ohne Markdown-Zeichen und ohne Tabellen, höchstens etwa 350 Wörter.
+Halte dich an den Auftrag der Lehrkraft. Schreibe reinen Text ohne Markdown-Zeichen und ohne Tabellen, höchstens etwa 500 Wörter.
 Setze Überschriften in eigene Zeilen. Füge am Ende einen Abschnitt „Lösungen für die Lehrkraft“ an.
 Verwende keine echten Personen und keine personenbezogenen Daten.`;
 
@@ -17,7 +17,7 @@ function istGueltig(daten: unknown): daten is ArbeitsblattAnfrage {
     (a.thema === "bwl" || a.thema === "mathe") &&
     typeof a.prompt === "string" &&
     a.prompt.trim().length >= 20 &&
-    a.prompt.length <= MAX_ZEICHEN
+    a.prompt.length <= MAX_PROMPT_ZEICHEN
   );
 }
 

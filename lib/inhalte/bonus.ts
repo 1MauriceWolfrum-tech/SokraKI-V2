@@ -17,6 +17,122 @@ export const THEMEN: Record<ThemaId, { titel: string; zielgruppe: string; prompt
   },
 };
 
+// Sokratische Planung (wie in Prototyp 1): Der Coach fragt, die Lehrkraft entscheidet.
+// Aus den Antworten entsteht ein strukturierter Prompt mit vorgegebenem Denkweg (Chain of Thought).
+export type PlanAntwort = { wahl: number[]; eigen: string };
+
+export const PLANUNG: { id: string; frage: string; bausteine: Record<ThemaId, string[]> | string[] }[] = [
+  {
+    id: "ziel",
+    frage: "Was sollen die Lernenden nach dem Arbeitsblatt können, was sie vorher noch nicht konnten?",
+    bausteine: {
+      bwl: [
+        "den Bezugspreis zweier Angebote mit Rabatt, Skonto und Bezugskosten berechnen",
+        "eine begründete Lieferantenentscheidung auch mit nicht-monetären Kriterien treffen",
+        "die Fachbegriffe Rabatt, Skonto und Bezugskosten in eigenen Worten erklären",
+      ],
+      mathe: [
+        "eine lineare Kostenfunktion aus Fixkosten und variablen Kosten aufstellen",
+        "Steigung und y-Achsenabschnitt im Sachzusammenhang deuten",
+        "die Gewinnschwelle berechnen und das Ergebnis auf Plausibilität prüfen",
+      ],
+    },
+  },
+  {
+    id: "gruppe",
+    frage: "Du kennst deine Klasse: Welche Unterschiede muss das Arbeitsblatt auffangen?",
+    bausteine: [
+      "einige haben Schwierigkeiten mit Fachsprache oder lernen Deutsch als Zweitsprache",
+      "das mathematische Vorwissen ist sehr unterschiedlich",
+      "nicht alle haben zu Hause ein eigenes Gerät oder einen Drucker",
+      "leistungsstarke Lernende brauchen eine zusätzliche Herausforderung",
+    ],
+  },
+  {
+    id: "hilfen",
+    frage: "Wie sollen die Lernenden Hilfe bekommen, ohne dass ihnen das Denken abgenommen wird?",
+    bausteine: [
+      "gestufte Hilfekarten mit Leitfragen statt fertiger Lösungswege",
+      "ein Wortspeicher, der Fachbegriffe in einfacher Sprache erklärt",
+      "Aufgaben in drei Niveaustufen: Basis, Standard, Erweiterung",
+      "Lösungen nur getrennt zur Selbstkontrolle nach der Bearbeitung",
+    ],
+  },
+  {
+    id: "pruefung",
+    frage: "Angenommen, die KI liefert dir gleich einen Entwurf: Woran prüfst du, ob er fachlich richtig und fair ist?",
+    bausteine: [
+      "alle Rechnungen selbst nachrechnen und Ergebnisse auf Plausibilität prüfen",
+      "auf Rollenklischees und einseitige Beispiele achten",
+      "prüfen, ob das Blatt auch ohne Gerät bearbeitbar ist",
+      "Sprachniveau und Umfang der Aufgaben prüfen",
+    ],
+  },
+];
+
+export function planBausteine(i: number, thema: ThemaId): string[] {
+  const b = PLANUNG[i].bausteine;
+  return Array.isArray(b) ? b : b[thema];
+}
+
+export function planText(i: number, thema: ThemaId, a: PlanAntwort | undefined): string {
+  if (!a) return "";
+  const teile = a.wahl.map((j) => planBausteine(i, thema)[j]).filter(Boolean);
+  if (a.eigen.trim()) teile.push(a.eigen.trim());
+  return teile.join("; ");
+}
+
+export function planBeantwortet(a: PlanAntwort | undefined): boolean {
+  return Boolean(a && (a.wahl.length > 0 || a.eigen.trim().length >= 10));
+}
+
+// Arbeitsblatt-Prompt mit Rolle, Kontext, Chain of Thought, Format und Regeln.
+export function arbeitsblattPrompt(thema: ThemaId, antworten: (PlanAntwort | undefined)[]): string {
+  const t = THEMEN[thema];
+  const [ziel, gruppe, hilfen, pruefung] = antworten.map((a, i) => planText(i, thema, a));
+  return `Rolle: Du bist eine erfahrene Lehrkraft an einer beruflichen Schule und erstellst Unterrichtsmaterial.
+
+Auftrag: Erstelle ein Arbeitsblatt zum Thema „${t.titel.replace(/^.*?: /, "")}“ für ${t.zielgruppe}.
+Lernziel: Die Lernenden sollen ${ziel || "das Thema sicher anwenden können"}.
+Lerngruppe: ${gruppe || "heterogene Klasse"}.
+Gewünschte Hilfen: ${hilfen || "gestufte Hilfen"}.
+
+Gehe Schritt für Schritt vor:
+1. Formuliere das Lernziel in einem Satz für die Lernenden.
+2. Entwickle eine realistische berufliche Lernsituation ohne Rollenklischees.
+3. Erstelle Aufgaben in drei Niveaustufen (Basis, Standard, Erweiterung).
+4. Ergänze die gewünschten Hilfen so, dass sie zum Denken anregen und keine Lösung verraten.
+5. Rechne alle Ergebnisse noch einmal nach und korrigiere Fehler.
+
+Format: reiner Text mit klaren Überschriften. Lösungen nur getrennt am Ende unter „Lösungen für die Lehrkraft“.
+Regeln: keine echten Personen, Fachbegriffe erklären, alle Aufgaben auch ohne Gerät bearbeitbar.
+Ich prüfe den Entwurf anschließend so: ${pruefung || "fachliche Richtigkeit und Fairness"}.`;
+}
+
+// Sokratischer Planungs-Prompt für die eigene KI – die KI fragt, statt das Arbeitsblatt zu schreiben.
+export function planungsPromptExtern(thema: ThemaId): string {
+  const t = THEMEN[thema];
+  return `<Rolle>
+Agiere als didaktischer Coach für die Unterrichtsplanung an beruflichen Schulen.
+</Rolle>
+
+<Situation>
+Ich plane ein Arbeitsblatt zum Thema „${t.titel.replace(/^.*?: /, "")}“ für ${t.zielgruppe}. Die Klasse ist heterogen.
+</Situation>
+
+<Zielsetzung>
+Führe mit mir einen sokratischen Dialog, damit ich das Arbeitsblatt selbst durchdenke: Lernziel, Lernvoraussetzungen, Differenzierung, Hilfen und Fairness. Schreibe kein fertiges Arbeitsblatt und keine Lösungen.
+</Zielsetzung>
+
+<Antwortformat>
+Beende jede Antwort mit genau einer präzisen Rückfrage. Hake nach, wenn meine Antwort oberflächlich ist.
+</Antwortformat>
+
+<Abschluss>
+Wenn ich „Planung abschließen“ schreibe, fasse meine Entscheidungen als strukturierten Prompt für das Arbeitsblatt zusammen.
+</Abschluss>`;
+}
+
 // Vorbereitete Entwürfe für den Modus ohne KI. Sie enthalten absichtlich typische Schwachstellen.
 export const ENTWUERFE: Record<ThemaId, string> = {
   bwl: `Arbeitsblatt: Angebotsvergleich

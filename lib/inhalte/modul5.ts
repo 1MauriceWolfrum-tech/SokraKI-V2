@@ -2,11 +2,19 @@ import type { QuizFrage } from "@/lib/typen";
 
 // ENTWURFSTEXT – Modul 5: Reflexion und Lernerfolgskontrolle (Konzept Kapitel 8).
 
-export const REFLEXIONSFRAGEN = [
-  { id: "r1", frage: "Hat sich deine Einschätzung verändert? Begründe deine Antwort." },
-  { id: "r2", frage: "Welche Chancen und Risiken von KI für Bildungsgerechtigkeit sind dir besonders wichtig geworden?" },
-  { id: "r3", frage: "Welche konkrete Maßnahme würdest du in deinem zukünftigen Unterricht umsetzen?" },
+// Erkenntnisse zum Anklicken – ohne richtig oder falsch. Nur die Transferfrage wird ausformuliert.
+export const ERKENNTNISSE = [
+  "Gleicher Zugang zu KI bedeutet nicht gleiche Lernchancen.",
+  "KI-Antworten klingen überzeugend, müssen aber geprüft werden.",
+  "Die Art der KI-Nutzung entscheidet über das Lernpotenzial – Hinweise statt Lösungen.",
+  "Lernende ohne Gerät brauchen gleichwertige Alternativen.",
+  "Prompting-Kompetenz ist ungleich verteilt und muss im Unterricht vermittelt werden.",
+  "KI kann Stereotype wiedergeben – Material vor dem Einsatz prüfen.",
+  "Ein sokratischer Dialog mit KI schärft die eigene Begründung.",
+  "Die fachliche und didaktische Verantwortung bleibt bei der Lehrkraft.",
 ];
+
+export const TRANSFERFRAGE = "Welche konkrete Maßnahme würdest du in deinem zukünftigen Unterricht umsetzen – und warum?";
 
 // Kriterien für eine gute Begründung – die Qualität der Reflexion zeigt sich nicht allein an einer veränderten Position.
 export const KRITERIEN = [
@@ -86,6 +94,34 @@ export const ABSCHLUSSTEST: QuizFrage[] = [
         feedback: "Richtig. KI kann unterstützen, die Verantwortung bleibt bei der Lehrkraft.",
       },
       { text: "Niemand – KI-Fehler sind unvermeidlich.", feedback: "Fehler sind möglich, aber durch Prüfen vermeidbar." },
+    ],
+  },
+  {
+    id: "t6",
+    frage: "Woran erkennst du, dass eine KI einen sokratischen Dialog führt?",
+    optionen: [
+      { text: "Sie gibt ausführliche Erklärungen mit Beispielen.", feedback: "Erklärungen nehmen das Denken ab – sokratisch wäre eine gezielte Frage." },
+      {
+        text: "Sie stellt genau eine Frage, knüpft an die letzte Antwort an und liefert keine Lösung.",
+        richtig: true,
+        feedback: "Richtig – so arbeitet auch der Lernbegleiter aus Modul 4.",
+      },
+      { text: "Sie lobt jede Antwort, damit die Person motiviert bleibt.", feedback: "Lob allein regt nicht zum Weiterdenken an." },
+      { text: "Sie stellt viele Fragen auf einmal, damit nichts vergessen wird.", feedback: "Mehrere Fragen gleichzeitig überfordern – eine Frage nach der anderen." },
+    ],
+  },
+  {
+    id: "t7",
+    frage: "Was bedeutet „angemessenes Vertrauen“ (Appropriate Reliance) in KI?",
+    optionen: [
+      { text: "KI-Ergebnissen grundsätzlich zu misstrauen.", feedback: "Pauschales Misstrauen lässt sinnvolle Unterstützung ungenutzt." },
+      { text: "KI-Ergebnisse zu übernehmen, wenn sie überzeugend klingen.", feedback: "Das ist Automation Bias – sprachliche Sicherheit garantiert keine Richtigkeit." },
+      {
+        text: "KI zur Unterstützung zu nutzen und ihre Ergebnisse fachlich zu prüfen, bevor man sie übernimmt.",
+        richtig: true,
+        feedback: "Richtig: Die KI unterstützt Entscheidungen, trifft sie aber nicht.",
+      },
+      { text: "Nur kostenpflichtige KI-Modelle zu verwenden.", feedback: "Auch leistungsfähige Modelle halluzinieren – Prüfen bleibt nötig." },
     ],
   },
 ];

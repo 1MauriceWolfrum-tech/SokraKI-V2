@@ -167,3 +167,96 @@ export const WEITERLESEN = [
   "Bender, E. M., Gebru, T., McMillan-Major, A. & Shmitchell, S. (2021). On the dangers of stochastic parrots. FAccT ’21, 610–623.",
   "UNESCO (2023). Guidance for generative AI in education and research. Paris: UNESCO.",
 ];
+
+// Was Lehrkräfte über KI wissen sollten – in Anlehnung an die Seminarunterlage
+// „Mensch-Maschine-Interaktion im heterogenen Schulkontext“ (Folien 13, 14, 17 und 20) und Guzman (2020).
+
+export const KI_KANN = [
+  "Muster in großen Datenmengen erkennen",
+  "Texte sprachlich hochwertig erzeugen",
+  "Informationen schnell abrufen und zusammenfassen",
+  "Gleichbleibend und ohne Ermüdung arbeiten",
+];
+
+export const KI_KANN_NICHT = [
+  "Inhalte tatsächlich verstehen",
+  "Den Wahrheitsgehalt der eigenen Aussagen prüfen",
+  "Kontext aus gelebter Erfahrung herstellen",
+  "Moralisch urteilen und Gefühle empfinden",
+];
+
+export const KI_KERNSATZ = "Sprachliche Überzeugungskraft ist keine Garantie für fachliche Qualität.";
+
+export const KERNRISIKEN = [
+  {
+    titel: "Automation Bias",
+    text: "Systemvorschläge werden unkritisch übernommen – gerade dann, wenn die KI-Erklärung fehlerhaft, aber überzeugend klingt.",
+    heterogenitaet: "Leistungsschwächere Lernende vertrauen Ausgaben eher blind. Herkunftsbedingte Unterschiede können dadurch wachsen.",
+  },
+  {
+    titel: "Halluzinationen",
+    text: "Die KI erfindet Fakten, Quellen oder Rechenschritte und präsentiert sie in sachlichem, plausiblem Ton.",
+    heterogenitaet: "Ohne Prüfkompetenz verfestigen sich Falschinformationen – vor allem bei Lernenden mit wenig Vorwissen.",
+  },
+  {
+    titel: "Algorithmische Verzerrung (Bias)",
+    text: "Die KI gibt gesellschaftliche Vorurteile aus ihren Trainingsdaten wieder.",
+    heterogenitaet: "Lernende aus benachteiligten Gruppen können durch stereotype Beispiele gebremst oder demotiviert werden.",
+  },
+];
+
+export const DIGITAL_DIVIDE = [
+  {
+    ebene: "First-Level Divide",
+    stichwort: "Zugang",
+    text: "Geräte und schnelles Internet sind ungleich verteilt.",
+    beispiel: "Tobias hat nur ein Smartphone mit wenig Datenvolumen.",
+  },
+  {
+    ebene: "Second-Level Divide",
+    stichwort: "Nutzung und Kompetenz",
+    text: "Auch mit Gerät fehlt oft das Wissen, KI wirksam zu steuern und ihre Antworten zu prüfen.",
+    beispiel: "Emma übernimmt KI-Rechnungen ungeprüft.",
+  },
+  {
+    ebene: "Third-Level Divide",
+    stichwort: "Ertrag und Teilhabe",
+    text: "Entscheidend ist, wer tatsächlich einen Lern- und Bildungsgewinn aus der Nutzung zieht.",
+    beispiel: "Wer KI als Tutor nutzt, lernt dazu – wer nur Lösungen abfragt, kaum.",
+  },
+];
+
+export type Vertrauen = "zu-wenig" | "angemessen" | "zu-viel";
+
+export const VERTRAUENSSTUFEN: { id: Vertrauen; titel: string }[] = [
+  { id: "zu-wenig", titel: "Zu wenig Vertrauen" },
+  { id: "angemessen", titel: "Angemessenes Vertrauen" },
+  { id: "zu-viel", titel: "Zu viel Vertrauen" },
+];
+
+export const VERTRAUENSFAELLE: { id: string; text: string; loesung: Vertrauen; erklaerung: string }[] = [
+  {
+    id: "v1",
+    text: "Emma kopiert die KI-Bezugskalkulation direkt in ihre Hausaufgabe, weil die Erklärung so sicher klingt.",
+    loesung: "zu-viel",
+    erklaerung: "Automation Bias: Die KI-Antwort wird ungeprüft übernommen. Ein Rechenfehler bliebe unentdeckt.",
+  },
+  {
+    id: "v2",
+    text: "Leyla lässt sich Skonto von der KI in einfacher Sprache erklären und vergleicht die Erklärung mit ihrem Lehrbuch.",
+    loesung: "angemessen",
+    erklaerung: "Die KI unterstützt, die Erklärung wird an einer zweiten Quelle geprüft – so sieht angemessenes Vertrauen aus.",
+  },
+  {
+    id: "v3",
+    text: "Eine Lehrkraft verbietet jede KI-Nutzung, weil „da sowieso nur Unsinn herauskommt“.",
+    loesung: "zu-wenig",
+    erklaerung: "Pauschales Misstrauen lässt sinnvolle Unterstützung ungenutzt – etwa sprachliche Hilfen für Lernende wie Leyla.",
+  },
+  {
+    id: "v4",
+    text: "Tobias rechnet das KI-Ergebnis mit einer Überschlagsrechnung nach und fragt bei einer Abweichung im Unterricht nach.",
+    loesung: "angemessen",
+    erklaerung: "Plausibilitätsprüfung und Rückfrage: Die KI unterstützt die Entscheidung, ersetzt sie aber nicht.",
+  },
+];

@@ -10,8 +10,8 @@ export const KURS = {
     "Entdecke, wie du KI im BWL- und Mathematikunterricht so einsetzt, dass möglichst alle Lernenden davon profitieren – und wo KI bestehende Ungleichheiten verstärken kann.",
   ueberblick: [
     "KI-Chatbots erklären Fachbegriffe, vereinfachen Aufgaben und liefern auf Knopfdruck Lösungen. Ob davon alle Lernenden profitieren, ist damit aber noch nicht entschieden: Geräte, Vorwissen, Sprache und die Fähigkeit, KI-Antworten zu prüfen, sind in beruflichen Klassen sehr unterschiedlich verteilt.",
-    "In diesem Kurs klärst du zuerst, was Bildungsgerechtigkeit bedeutet und welche Chancen und Risiken KI mit sich bringt. Danach triffst du Entscheidungen in zwei Unterrichtsfällen aus BWL und Mathematik und prüfst sie im Gespräch mit einem KI-Lernbegleiter, der dir Fragen stellt statt Antworten zu geben.",
-    "Im optionalen Bonusmodul lässt du ein Arbeitsblatt von einer KI entwerfen und prüfst es mit einer Checkliste. Denn eines zieht sich durch den ganzen Kurs: Die fachliche und didaktische Verantwortung bleibt bei dir.",
+    "In diesem Kurs klärst du zuerst, was Bildungsgerechtigkeit bedeutet und welche Chancen und Risiken KI mit sich bringt. Danach triffst du Entscheidungen in zwei Unterrichtsfällen aus BWL und Mathematik und prüfst sie in einem sokratischen Dialog mit einem KI-Lernbegleiter, der dir Fragen stellt statt Antworten zu geben.",
+    "Im optionalen Bonusmodul planst du ein Arbeitsblatt im sokratischen Dialog, lässt es von einer KI entwerfen und prüfst es mit einer Checkliste. Denn eines zieht sich durch den ganzen Kurs: Die fachliche und didaktische Verantwortung bleibt bei dir.",
   ],
   lernziele: [
     {
@@ -30,7 +30,7 @@ export const KURS = {
   voraussetzungen: [
     "Grundlegende Kenntnisse über KI sind hilfreich, aber nicht erforderlich.",
     "Du brauchst nur einen Browser. Ein KI-Konto ist nicht nötig.",
-    "Plane etwa 60 Minuten ein, mit Bonusmodul etwa 75 Minuten. Du kannst jederzeit unterbrechen.",
+    "Plane etwa 65 Minuten ein, mit Bonusmodul etwa 85 Minuten. Du kannst jederzeit unterbrechen.",
   ],
 };
 
@@ -47,15 +47,15 @@ export const MODULE: ModulMeta[] = [
     id: "m2",
     nummer: "02",
     titel: "Bildungsgerechtigkeit im KI-Zeitalter",
-    kurz: "Begriffe, Chancen und Risiken von KI für gerechte Bildung.",
-    dauer: 15,
+    kurz: "Begriffe, KI-Grundwissen, Chancen und Risiken von KI für gerechte Bildung.",
+    dauer: 18,
     lernziel: "Lernziel 1",
   },
   {
     id: "m3",
     nummer: "03",
     titel: "KI im BWL- und Mathematikunterricht",
-    kurz: "Zwei Unterrichtsfälle: entscheiden, begründen, Maßnahmen entwickeln.",
+    kurz: "Zwei Unterrichtsfälle: entscheiden, Chats analysieren, mit Musterlösung vergleichen.",
     dauer: 15,
     lernziel: "Lernziel 2",
   },
@@ -63,8 +63,8 @@ export const MODULE: ModulMeta[] = [
     id: "m4",
     nummer: "04",
     titel: "Reflektieren mit dem KI-Lernbegleiter",
-    kurz: "Prüfe deine Entscheidung in einem fragenden Gespräch.",
-    dauer: 15,
+    kurz: "Lerne den sokratischen Dialog kennen und prüfe deine Entscheidung im Gespräch.",
+    dauer: 18,
     lernziel: "Lernziel 2",
   },
   {
@@ -79,8 +79,8 @@ export const MODULE: ModulMeta[] = [
     id: "bonus",
     nummer: "Bonus",
     titel: "KI-Arbeitsblatt erstellen und prüfen",
-    kurz: "Vom KI-Output zum didaktisch geeigneten Arbeitsblatt.",
-    dauer: 15,
+    kurz: "Arbeitsblatt sokratisch planen, mit KI erstellen und kritisch prüfen.",
+    dauer: 20,
     lernziel: "Lernziel 3",
     optional: true,
   },
