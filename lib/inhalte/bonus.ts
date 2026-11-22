@@ -1,4 +1,4 @@
-import type { ThemaId } from "@/lib/typen";
+import type { Arbeitsblatt, ThemaId } from "@/lib/typen";
 
 // ENTWURFSTEXT – Bonusmodul: Vom KI-Output zum didaktisch geeigneten Arbeitsblatt (Konzept Kapitel 9).
 
@@ -134,34 +134,62 @@ Wenn ich „Planung abschließen“ schreibe, fasse meine Entscheidungen als str
 }
 
 // Vorbereitete Entwürfe für den Modus ohne KI. Sie enthalten absichtlich typische Schwachstellen.
-export const ENTWUERFE: Record<ThemaId, string> = {
-  bwl: `Arbeitsblatt: Angebotsvergleich
-
-Die Müller GmbH möchte 200 neue Bürostühle kaufen. Herr Müller hat seine Sekretärin gebeten, zwei Angebote einzuholen.
-
-Angebot 1 – Bürowelt GmbH: Listenpreis 120 € je Stuhl, 10 % Rabatt, 2 % Skonto, Bezugskosten 150 €.
-Angebot 2 – Sitzfix KG: Listenpreis 115 € je Stuhl, 5 % Rabatt, 3 % Skonto, Lieferung frei Haus.
-
-Aufgabe 1: Berechne den Bezugspreis beider Angebote unter Berücksichtigung von Rabatt, Skonto und Bezugskosten.
-Aufgabe 2: Entscheide, welches Angebot die Müller GmbH annehmen sollte.
-Aufgabe 3: Nenne zwei weitere Kriterien neben dem Preis, die bei der Entscheidung wichtig sind.
-
-Lösung
-Angebot 1: 200 × 120 € = 24.000 €. Rabatt 10 % = 2.400 €. Skonto 2 % vom Listenpreis = 480 €. Bezugspreis = 24.000 € − 2.400 € − 480 € + 150 € = 21.270 €.
-Angebot 2: 200 × 115 € = 23.000 €. Rabatt 5 % = 1.150 €. Skonto 3 % = 655,50 €. Bezugspreis = 21.194,50 €.
-Die Müller GmbH sollte Angebot 2 annehmen.`,
-  mathe: `Arbeitsblatt: Lineare Kostenfunktionen
-
-Die Druckerei Schnelldruck hat monatliche Fixkosten von 800 €. Für jedes gedruckte Flyer-Paket entstehen variable Kosten von 2 €.
-
-Aufgabe 1: Stelle die Kostenfunktion K(x) auf. Bestimme den Ordinatenabschnitt und die Steigung.
-Aufgabe 2: Berechne die Kosten für 300 Flyer-Pakete.
-Aufgabe 3: Ein Paket wird für 6 € verkauft. Ab wie vielen Paketen macht die Druckerei Gewinn?
-
-Lösung
-Aufgabe 1: K(x) = 800x + 2. Ordinatenabschnitt 2, Steigung 800.
-Aufgabe 2: K(300) = 800 · 300 + 2 = 240.002 €.
-Aufgabe 3: 6x = 800x + 2 – es gibt keine Gewinnschwelle.`,
+export const ENTWUERFE: Record<ThemaId, Arbeitsblatt> = {
+  bwl: {
+    titel: "Arbeitsblatt: Angebotsvergleich",
+    lernziel: "",
+    situation:
+      "Die Müller GmbH möchte 200 neue Bürostühle kaufen. Herr Müller hat seine Sekretärin gebeten, zwei Angebote einzuholen.\n\nAngebot 1 – Bürowelt GmbH: Listenpreis 120 € je Stuhl, 10 % Rabatt, 2 % Skonto, Bezugskosten 150 €.\nAngebot 2 – Sitzfix KG: Listenpreis 115 € je Stuhl, 5 % Rabatt, 3 % Skonto, Lieferung frei Haus.",
+    glossar: [],
+    aufgaben: [
+      {
+        niveau: "standard",
+        text: "Berechne den Bezugspreis beider Angebote unter Berücksichtigung von Rabatt, Skonto und Bezugskosten.",
+        hilfe: "",
+        loesung:
+          "Angebot 1: 200 × 120 € = 24.000 €. Rabatt 10 % = 2.400 €. Skonto 2 % vom Listenpreis = 480 €. Bezugspreis = 24.000 € − 2.400 € − 480 € + 150 € = 21.270 €.\nAngebot 2: 200 × 115 € = 23.000 €. Rabatt 5 % = 1.150 €. Skonto 3 % = 655,50 €. Bezugspreis = 21.194,50 €.",
+      },
+      {
+        niveau: "standard",
+        text: "Entscheide, welches Angebot die Müller GmbH annehmen sollte.",
+        hilfe: "",
+        loesung: "Die Müller GmbH sollte Angebot 2 annehmen.",
+      },
+      {
+        niveau: "standard",
+        text: "Nenne zwei weitere Kriterien neben dem Preis, die bei der Entscheidung wichtig sind.",
+        hilfe: "",
+        loesung: "",
+      },
+    ],
+  },
+  mathe: {
+    titel: "Arbeitsblatt: Lineare Kostenfunktionen",
+    lernziel: "",
+    situation:
+      "Die Druckerei Schnelldruck hat monatliche Fixkosten von 800 €. Für jedes gedruckte Flyer-Paket entstehen variable Kosten von 2 €.",
+    glossar: [],
+    aufgaben: [
+      {
+        niveau: "standard",
+        text: "Stelle die Kostenfunktion K(x) auf. Bestimme den Ordinatenabschnitt und die Steigung.",
+        hilfe: "",
+        loesung: "K(x) = 800x + 2. Ordinatenabschnitt 2, Steigung 800.",
+      },
+      {
+        niveau: "standard",
+        text: "Berechne die Kosten für 300 Flyer-Pakete.",
+        hilfe: "",
+        loesung: "K(300) = 800 · 300 + 2 = 240.002 €.",
+      },
+      {
+        niveau: "standard",
+        text: "Ein Paket wird für 6 € verkauft. Ab wie vielen Paketen macht die Druckerei Gewinn?",
+        hilfe: "",
+        loesung: "6x = 800x + 2 – es gibt keine Gewinnschwelle.",
+      },
+    ],
+  },
 };
 
 // Auflösung für die vorbereiteten Entwürfe – wird erst nach der eigenen Prüfung angezeigt.

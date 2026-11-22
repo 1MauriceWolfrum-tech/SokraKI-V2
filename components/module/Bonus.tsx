@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ArbeitsblattEditor, EntwurfAnsicht } from "@/components/Arbeitsblatt";
 import { Hinweis, Impuls, Kopierfeld, Textantwort } from "@/components/Bausteine";
-import { IconDownload } from "@/components/Icons";
+import { IconDrucker } from "@/components/Icons";
 import type { SchrittDef } from "@/components/module/typen";
+import { istArbeitsblatt, vollstaendig } from "@/lib/arbeitsblatt";
 import { hatText, text, useFortschritt, useWert } from "@/lib/fortschritt";
 import {
   CHECKLISTE,
@@ -22,28 +24,37 @@ import {
 } from "@/lib/inhalte/bonus";
 import {
   MAX_PROMPT_ZEICHEN,
-  MAX_ZEICHEN,
+  type Arbeitsblatt,
   type ArbeitsblattAntwort,
   type KiModus,
+  type Schwachstelle,
   type ThemaId,
   type Werte,
 } from "@/lib/typen";
 
 type Bewertung = { wert: "ja" | "teilweise" | "nein" | ""; notiz: string };
-type Schwachstelle = { problem: string; vorschlag: string };
+
+function schwachstellenListe(w: Werte): Schwachstelle[] {
+  return (w["bonus:schwachstellen"] as Schwachstelle[] | undefined) ?? [];
+}
+
+async function frageArbeitsblatt(anfrage: object): Promise<ArbeitsblattAntwort> {
+  const res = await fetch("/api/arbeitsblatt", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(anfrage),
+  });
+  if (!res.ok) throw new Error(String(res.status));
+  return (await res.json()) as ArbeitsblattAntwort;
+}
 
 function Entwurf() {
   const { werte } = useFortschritt();
-  const entwurf = text(werte, "bonus:entwurf");
-  if (!entwurf) return <Hinweis art="warnung">Erzeuge zuerst im ersten Schritt einen Entwurf.</Hinweis>;
-  return (
-    <figure className="entwurf">
-      <figcaption>
-        KI-Entwurf {werte["bonus:quelle"] === "skript" ? "(vorbereiteter Beispielentwurf)" : "(von Claude erzeugt)"}
-      </figcaption>
-      <pre>{entwurf}</pre>
-    </figure>
-  );
+  const blatt = werte["bonus:blatt"];
+  if (!istArbeitsblatt(blatt)) {
+    return <Hinweis art="warnung">Erzeuge zuerst im Schritt „Arbeitsblatt generieren“ einen Entwurf.</Hinweis>;
+  }
+  return <EntwurfAnsicht blatt={blatt} quelle={String(werte["bonus:quelle"] ?? "skript")} />;
 }
 
 function planAntworten(w: Werte): (PlanAntwort | undefined)[] {
@@ -169,24 +180,21 @@ function Generieren() {
   const setPrompt = (p: string) => setze("bonus:prompt", p);
   const [laedt, setLaedt] = useState(false);
   const [hinweis, setHinweis] = useState<string | null>(null);
+  const vorhanden = istArbeitsblatt(werte["bonus:blatt"]);
 
   if (!thema) return <Hinweis art="warnung">Plane zuerst im vorherigen Schritt dein Arbeitsblatt.</Hinweis>;
 
   async function erzeugen() {
     if (!thema) return;
+    if (vorhanden && !window.confirm("Ein neuer Entwurf ersetzt den bisherigen und deine Überarbeitung. Fortfahren?")) return;
     setLaedt(true);
     setHinweis(null);
     try {
-      const res = await fetch("/api/arbeitsblatt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ thema, prompt }),
-      });
-      if (!res.ok) throw new Error(String(res.status));
-      const daten = (await res.json()) as ArbeitsblattAntwort;
-      setze("bonus:entwurf", daten.entwurf);
+      const daten = await frageArbeitsblatt({ aktion: "entwurf", thema, prompt });
+      setze("bonus:blatt", daten.blatt);
       setze("bonus:quelle", daten.modus satisfies KiModus);
-      setze("bonus:ueberarbeitung", daten.entwurf);
+      setze("bonus:fassung", daten.blatt);
+      setze("bonus:geprueft", false);
       setHinweis(daten.hinweis ?? null);
     } catch {
       setHinweis("Der Entwurf konnte nicht erzeugt werden. Versuche es noch einmal.");
@@ -227,7 +235,7 @@ function Generieren() {
           </button>
         )}
       </div>
-      {werte["bonus:quelle"] !== "claude" && (
+      {werte["bonus:quelle"] !== "claude" && werte["bonus:quelle"] !== "openrouter" && (
         <p className="hilfe">
           Ohne KI-Zugang zeigt der Kurs einen vorbereiteten Beispielentwurf mit typischen Schwachstellen – genau die
           Art Fehler, die auch ein guter Prompt nicht ausschließt.
@@ -243,7 +251,7 @@ function Generieren() {
         </p>
       </details>
       {hinweis && <Hinweis art="warnung">{hinweis}</Hinweis>}
-      {text(werte, "bonus:entwurf") && (
+      {vorhanden && (
         <div className="abstand-gross">
           <Entwurf />
         </div>
@@ -303,38 +311,25 @@ function Pruefen() {
   );
 }
 
-function vollstaendigeSchwachstellen(w: Werte): number {
-  const liste = (w["bonus:schwachstellen"] as Schwachstelle[] | undefined) ?? [];
-  return liste.filter((s) => s.problem.trim().length >= 10 && s.vorschlag.trim().length >= 10).length;
-}
-
 function Verbessern() {
   const { werte } = useFortschritt();
   const [liste, setListe] = useWert<Schwachstelle[]>("bonus:schwachstellen", [
     { problem: "", vorschlag: "" },
     { problem: "", vorschlag: "" },
   ]);
-  const [ueberarbeitung, setUeberarbeitung] = useWert<string>("bonus:ueberarbeitung", text(werte, "bonus:entwurf"));
   const thema = werte["bonus:thema"] as ThemaId | undefined;
-  const anzahl = vollstaendigeSchwachstellen(werte);
+  const anzahl = vollstaendig(schwachstellenListe(werte)).length;
 
   function aendere(i: number, neu: Partial<Schwachstelle>) {
     setListe(liste.map((s, j) => (j === i ? { ...s, ...neu } : s)));
   }
 
-  function speichern() {
-    const blob = new Blob([ueberarbeitung], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "arbeitsblatt-ueberarbeitet.txt";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
   return (
     <>
-      <p>Benenne mindestens zwei Schwachstellen und formuliere jeweils einen konkreten Verbesserungsvorschlag.</p>
+      <p>
+        Benenne mindestens zwei Schwachstellen und formuliere jeweils einen konkreten Verbesserungsvorschlag. Im nächsten
+        Schritt setzt du die Vorschläge um.
+      </p>
       <ol className="schwachstellen">
         {liste.map((s, i) => (
           <li key={i}>
@@ -361,7 +356,12 @@ function Verbessern() {
           </li>
         ))}
       </ol>
-      <button type="button" className="knopf-text" onClick={() => setListe([...liste, { problem: "", vorschlag: "" }])}>
+      <button
+        type="button"
+        className="knopf-text"
+        disabled={liste.length >= 10}
+        onClick={() => setListe([...liste, { problem: "", vorschlag: "" }])}
+      >
         + Weitere Schwachstelle
       </button>
 
@@ -377,20 +377,104 @@ function Verbessern() {
           </ul>
         </Impuls>
       )}
+    </>
+  );
+}
 
-      <div className="feld abstand-gross">
-        <label htmlFor="bonus-ueberarbeitung">Überarbeitetes Arbeitsblatt (optional)</label>
-        <textarea
-          id="bonus-ueberarbeitung"
-          rows={12}
-          maxLength={MAX_ZEICHEN * 3}
-          value={ueberarbeitung}
-          onChange={(e) => setUeberarbeitung(e.target.value)}
-        />
+function Fertigstellen() {
+  const { werte } = useFortschritt();
+  const [fassung, setFassung] = useWert<Arbeitsblatt | null>("bonus:fassung", null);
+  const [geprueft, setGeprueft] = useWert<boolean>("bonus:geprueft", false);
+  const [laedt, setLaedt] = useState(false);
+  const [meldung, setMeldung] = useState<{ art: "erfolg" | "warnung"; text: string } | null>(null);
+
+  const entwurf = werte["bonus:blatt"];
+  const thema = werte["bonus:thema"] as ThemaId | undefined;
+  if (!istArbeitsblatt(entwurf) || !thema) {
+    return <Hinweis art="warnung">Erzeuge zuerst im Schritt „Arbeitsblatt generieren“ einen Entwurf.</Hinweis>;
+  }
+  const blatt = istArbeitsblatt(fassung) ? fassung : entwurf;
+  const vorschlaege = vollstaendig(schwachstellenListe(werte));
+  const mitKi = werte["bonus:quelle"] !== "skript";
+
+  // Jede Änderung nach der Prüfung verlangt eine neue Prüfung.
+  function aendern(neu: Arbeitsblatt) {
+    setFassung(neu);
+    if (geprueft) setGeprueft(false);
+  }
+
+  async function einarbeiten() {
+    setLaedt(true);
+    setMeldung(null);
+    try {
+      const daten = await frageArbeitsblatt({ aktion: "ueberarbeiten", thema, blatt, schwachstellen: vorschlaege });
+      if (daten.modus === "skript") {
+        setMeldung({ art: "warnung", text: daten.hinweis ?? "Die KI ist gerade nicht verfügbar. Ändere die Felder selbst." });
+        return;
+      }
+      aendern(daten.blatt);
+      setMeldung({
+        art: "erfolg",
+        text: "Die KI hat deine Vorschläge eingearbeitet. Prüfe jede Änderung – besonders Zahlen und Lösungen.",
+      });
+    } catch {
+      setMeldung({ art: "warnung", text: "Die Überarbeitung hat nicht geklappt. Versuche es noch einmal oder ändere die Felder selbst." });
+    } finally {
+      setLaedt(false);
+    }
+  }
+
+  function zuruecksetzen() {
+    if (!window.confirm("Alle Änderungen verwerfen und zum ursprünglichen Entwurf zurückkehren?")) return;
+    aendern(entwurf as Arbeitsblatt);
+    setMeldung(null);
+  }
+
+  return (
+    <>
+      <p>
+        Setze jetzt deine Verbesserungsvorschläge um.{" "}
+        {mitKi
+          ? "Du kannst sie von der KI einarbeiten lassen und das Ergebnis danach in den Feldern anpassen."
+          : "Ändere dazu die Felder direkt."}{" "}
+        Was hier steht, kommt so auf das Arbeitsblatt.
+      </p>
+      {mitKi && (
+        <div className="knopfreihe">
+          <button
+            type="button"
+            className="knopf knopf-primaer"
+            disabled={laedt || vorschlaege.length === 0}
+            onClick={einarbeiten}
+          >
+            {laedt
+              ? "KI arbeitet deine Vorschläge ein …"
+              : `${vorschlaege.length} ${vorschlaege.length === 1 ? "Vorschlag" : "Vorschläge"} von der KI einarbeiten lassen`}
+          </button>
+        </div>
+      )}
+      {meldung && <Hinweis art={meldung.art}>{meldung.text}</Hinweis>}
+
+      <div className="abstand-gross">
+        <ArbeitsblattEditor blatt={blatt} aendern={aendern} />
       </div>
-      <button type="button" className="knopf knopf-zweit" disabled={!ueberarbeitung.trim()} onClick={speichern}>
-        <IconDownload groesse={18} /> Als Textdatei speichern
+      <button type="button" className="knopf-text" onClick={zuruecksetzen}>
+        Zum ursprünglichen Entwurf zurückkehren
       </button>
+
+      <div className="fertig-pruefung">
+        <label className="checkliste-zeile">
+          <input type="checkbox" checked={geprueft} onChange={(e) => setGeprueft(e.target.checked)} />
+          Ich habe das Arbeitsblatt geprüft – auch alle Zahlen und Lösungen.
+        </label>
+        {geprueft ? (
+          <Link href="/arbeitsblatt" className="knopf knopf-primaer">
+            <IconDrucker groesse={18} /> Arbeitsblatt als PDF
+          </Link>
+        ) : (
+          <p className="hilfe">Bestätige deine Prüfung, dann kannst du das Arbeitsblatt drucken oder als PDF speichern.</p>
+        )}
+      </div>
     </>
   );
 }
@@ -409,7 +493,12 @@ function Reflexion() {
 
 export const BONUS: SchrittDef[] = [
   { id: "planen", titel: "Arbeitsblatt sokratisch planen", Inhalt: Planen, fertig: planungFertig },
-  { id: "generieren", titel: "Arbeitsblatt generieren", Inhalt: Generieren, fertig: (w) => hatText(w, "bonus:entwurf", 1) },
+  {
+    id: "generieren",
+    titel: "Arbeitsblatt generieren",
+    Inhalt: Generieren,
+    fertig: (w) => istArbeitsblatt(w["bonus:blatt"]),
+  },
   {
     id: "pruefen",
     titel: "Arbeitsblatt prüfen",
@@ -420,6 +509,17 @@ export const BONUS: SchrittDef[] = [
         return Boolean(b?.wert);
       }),
   },
-  { id: "verbessern", titel: "Arbeitsblatt verbessern", Inhalt: Verbessern, fertig: (w) => vollstaendigeSchwachstellen(w) >= 2 },
+  {
+    id: "verbessern",
+    titel: "Schwachstellen benennen",
+    Inhalt: Verbessern,
+    fertig: (w) => vollstaendig(schwachstellenListe(w)).length >= 2,
+  },
+  {
+    id: "fertigstellen",
+    titel: "Arbeitsblatt fertigstellen",
+    Inhalt: Fertigstellen,
+    fertig: (w) => istArbeitsblatt(w["bonus:fassung"]) && w["bonus:geprueft"] === true,
+  },
   { id: "reflexion", titel: "Abschließende Reflexion", Inhalt: Reflexion, fertig: (w) => hatText(w, "bonus:verantwortung", 60) },
 ];

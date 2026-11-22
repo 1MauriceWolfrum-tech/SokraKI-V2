@@ -1698,6 +1698,318 @@ thead th {
   font-weight: 400;
 }
 
+.vorformatiert {
+  white-space: pre-line;
+}
+
+.knopfreihe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Arbeitsblatt: Entwurf */
+.entwurf-inhalt {
+  padding: 1rem 1.2rem;
+}
+
+.entwurf-inhalt h3 {
+  margin-top: 0;
+}
+
+.entwurf-glossar {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+}
+
+.entwurf-glossar dt {
+  display: inline;
+  font-weight: 700;
+}
+
+.entwurf-glossar dt::after {
+  content: ": ";
+}
+
+.entwurf-glossar dd {
+  display: inline;
+  margin: 0;
+}
+
+.entwurf-aufgaben {
+  padding-left: 1.3rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.entwurf-aufgaben p {
+  margin: 0.35rem 0;
+}
+
+.entwurf-loesung {
+  background: var(--lime-zart);
+  border-radius: 10px;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.92rem;
+}
+
+.niveau-marke {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--violett);
+  background: var(--violett-zart);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+}
+
+/* Arbeitsblatt: Bearbeiten */
+select {
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+  border: 1.5px solid var(--rand);
+  border-radius: 14px;
+  padding: 0.6rem 0.85rem;
+}
+
+select:focus {
+  border-color: var(--violett);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--violett-zart);
+}
+
+.editor-block {
+  border: 1px solid var(--rand);
+  border-radius: 16px;
+  padding: 1rem 1.1rem 0.4rem;
+  margin: 0 0 1rem;
+}
+
+.editor-block legend {
+  padding: 0 0.3rem;
+}
+
+.editor-kopf {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.editor-glossar-zeile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.fertig-pruefung {
+  margin-top: 2rem;
+  padding: 1.1rem 1.2rem;
+  border: 1.5px solid var(--lime);
+  background: var(--lime-zart);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.8rem;
+  justify-items: start;
+}
+
+.fertig-pruefung .hilfe {
+  margin: 0;
+}
+
+/* Arbeitsblatt: Druckfassung (DIN A4) */
+.druckseite {
+  max-width: 820px;
+}
+
+.druckblatt {
+  background: #fff;
+  border: 1px solid var(--rand);
+  box-shadow: 0 10px 30px rgba(20, 18, 31, 0.08);
+  padding: 2.2rem 2.4rem;
+  margin: 2rem 0;
+  font-size: 0.98rem;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.druck-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  border-bottom: 2px solid var(--violett);
+  padding-bottom: 0.8rem;
+}
+
+.druck-kopf p {
+  margin: 0;
+}
+
+.druck-fach {
+  font-weight: 700;
+  color: var(--violett);
+}
+
+.druck-zielgruppe {
+  font-size: 0.85rem;
+  color: var(--text-leise);
+}
+
+.druck-felder {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.druck-felder div {
+  display: grid;
+  grid-template-columns: 3.5rem 10rem;
+  align-items: end;
+}
+
+.druck-felder dt {
+  color: var(--text-leise);
+}
+
+.druck-felder dd {
+  margin: 0;
+  border-bottom: 1px solid #8a8da3;
+  height: 1.2rem;
+}
+
+.druck-titel {
+  font-size: 1.6rem;
+  color: var(--violett);
+  margin: 1.2rem 0 0.6rem;
+}
+
+.druckblatt h2 {
+  font-size: 1.05rem;
+  margin: 1.3rem 0 0.5rem;
+}
+
+.druck-lernziel {
+  border-left: 4px solid var(--lime);
+  padding: 0.3rem 0 0.3rem 0.8rem;
+}
+
+.druck-glossar {
+  margin-top: 1.2rem;
+  border: 1px solid var(--hellblau);
+  background: var(--hellblau-zart);
+  border-radius: 12px;
+  padding: 0.2rem 1rem 0.8rem;
+}
+
+.druck-glossar dl {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.druck-glossar dl div {
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) 1fr;
+  gap: 1rem;
+}
+
+.druck-glossar dt {
+  font-weight: 700;
+}
+
+.druck-glossar dd {
+  margin: 0;
+}
+
+.druck-aufgaben {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.druck-aufgabe {
+  break-inside: avoid;
+}
+
+.druck-aufgabe p {
+  margin: 0.3rem 0;
+}
+
+.druck-aufgabe-kopf {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
+}
+
+.druck-niveau {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--violett);
+  white-space: nowrap;
+}
+
+.druck-hilfe {
+  font-size: 0.88rem;
+  border: 1px dashed var(--flieder);
+  border-radius: 10px;
+  padding: 0.35rem 0.65rem;
+}
+
+.druck-linien div {
+  height: 1.9rem;
+  border-bottom: 1px solid #c3c6d4;
+}
+
+.druck-fuss {
+  margin-top: 1.8rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rand);
+  font-size: 0.75rem;
+  color: var(--text-leise);
+}
+
+.druck-loesungen {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed var(--rand);
+}
+
+.druck-loesungen ol {
+  padding-left: 1.3rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.druck-loesungen p {
+  margin: 0.2rem 0 0;
+}
+
+@media (max-width: 600px) {
+  .druckblatt {
+    padding: 1.4rem 1.1rem;
+  }
+
+  .druck-glossar dl div,
+  .editor-glossar-zeile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+
+  .druck-felder div {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+  }
+}
+
 /* Teilnahmebestätigung */
 .urkunde {
   margin: 2rem 0;
@@ -1888,6 +2200,26 @@ thead th {
   .urkunde {
     margin: 0;
   }
+
+  .druckblatt {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    font-size: 10.5pt;
+  }
+
+  .druck-loesungen {
+    break-before: page;
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 15mm 16mm;
 }
 
 /* V2.1: Mehrfachauswahl, Kopierfeld, Antwortbausteine, Vergleich, Nachschlagen */

@@ -8,10 +8,12 @@
   },
   "scripts": {
     "dev": "next dev -H localhost",
-    "dev:netzwerk": "next dev -H 0.0.0.0",
+    "dev:netzwerk": "node scripts/dev-netzwerk.mjs",
     "build": "next build",
     "start": "next start -H localhost",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "sicherheit": "npm audit --omit=dev",
+    "schutz-aktivieren": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.4.0",

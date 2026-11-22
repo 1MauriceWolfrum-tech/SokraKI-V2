@@ -103,8 +103,8 @@ export function Lernbegleiter({ szenario, entscheidung }: { szenario: SzenarioId
         <div>
           <strong>KI-Lernbegleiter</strong>
           <p className="hilfe">
-            {modus === "claude"
-              ? "KI-System (Claude) – kein Mensch. Stellt Fragen, gibt keine Lösungen."
+            {modus === "claude" || modus === "openrouter"
+              ? "KI-System (Sprachmodell) – kein Mensch. Stellt Fragen, gibt keine Lösungen."
               : "Folgt eurem Gesprächsleitfaden – kein Mensch. Stellt Fragen, gibt keine Lösungen."}
           </p>
         </div>

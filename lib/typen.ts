@@ -23,7 +23,7 @@ export type QuizFrage = {
 // Aussage für eine Mehrfachauswahl mit Selbstkontrolle.
 export type Auswahlaussage = { text: string; bewertung: "tragfaehig" | "eingeschraenkt" | "kurz"; feedback: string };
 
-export type KiModus = "skript" | "claude";
+export type KiModus = "skript" | "claude" | "openrouter";
 
 // KI-Lernbegleiter (Modul 4)
 export type SzenarioId = "a" | "b";
@@ -50,8 +50,20 @@ export type BegleiterAntwort = {
 
 // KI-Arbeitsblatt (Bonusmodul)
 export type ThemaId = "bwl" | "mathe";
-export type ArbeitsblattAnfrage = { thema: ThemaId; prompt: string };
-export type ArbeitsblattAntwort = { entwurf: string; modus: KiModus; hinweis?: string };
+export type Niveau = "basis" | "standard" | "erweiterung";
+export type Aufgabe = { niveau: Niveau; text: string; hilfe: string; loesung: string };
+export type Arbeitsblatt = {
+  titel: string;
+  lernziel: string;
+  situation: string;
+  glossar: { begriff: string; erklaerung: string }[];
+  aufgaben: Aufgabe[];
+};
+export type Schwachstelle = { problem: string; vorschlag: string };
+export type ArbeitsblattAnfrage =
+  | { aktion: "entwurf"; thema: ThemaId; prompt: string }
+  | { aktion: "ueberarbeiten"; thema: ThemaId; blatt: Arbeitsblatt; schwachstellen: Schwachstelle[] };
+export type ArbeitsblattAntwort = { blatt: Arbeitsblatt; modus: KiModus; hinweis?: string };
 
 // Obergrenzen für Anfragen an die KI-Schnittstellen.
 export const MAX_ZEICHEN = 2000;

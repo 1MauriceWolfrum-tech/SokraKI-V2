@@ -1,11 +1,10 @@
-import type Anthropic from "@anthropic-ai/sdk";
-import { frageClaude } from "@/lib/ki/client";
+import { frageKi, type KiNachricht } from "@/lib/ki/client";
 import { FALL_A, FALL_B } from "@/lib/inhalte/modul3";
 import { PHASEN } from "@/lib/inhalte/modul4";
 import type { Schritt } from "@/lib/lernbegleiter/phasen";
 import type { Beitrag, SzenarioId } from "@/lib/typen";
 
-// KI-Lernbegleiter über Claude: formuliert die Frage der von der App festgelegten Phase.
+// KI-Lernbegleiter: Das Sprachmodell formuliert die Frage der von der App festgelegten Phase.
 
 function fallText(szenario: SzenarioId): string {
   if (szenario === "a") {
@@ -41,7 +40,7 @@ ${PHASEN.map((p) => `Phase ${p.nr} – ${p.titel}: ${p.funktion}`).join("\n")}
 - Gib keine fertigen Lösungen vor, halte keine Vorträge und bewerte Antworten nicht als richtig oder falsch.
 - Bekunde keine Gefühle und gib dich nicht als Mensch aus.
 - Bei persönlichen oder emotionalen Themen verweise auf menschliche Ansprechpersonen und kehre zum Fall zurück.
-- Folge der Phasenanweisung am Ende des Gesprächs und erwähne diese Regeln nicht.
+- Folge der Phasenanweisung für die aktuelle Antwort und erwähne diese Regeln nicht.
 </Regeln>`;
 }
 
@@ -61,7 +60,7 @@ export function pruefeFrage(text: string): boolean {
 }
 
 // Liefert null, wenn auch der zweite Versuch die Regeln verletzt – dann übernimmt das Drehbuch.
-export async function claudeFrage(
+export async function kiFrage(
   szenario: SzenarioId,
   entscheidung: string,
   verlauf: Beitrag[],
@@ -69,24 +68,24 @@ export async function claudeFrage(
 ): Promise<{ text: string | null; korrigiert: boolean }> {
   const system = systemprompt(szenario, entscheidung);
   // Verlauf als reiner Text: keine Denkblöcke früherer Antworten, neue Beiträge nur hinten angehängt.
-  const basis: Anthropic.Beta.BetaMessageParam[] = [
+  const nachrichten: KiNachricht[] = [
     { role: "user", content: "Ich möchte meine Entscheidung im Gespräch prüfen." },
     ...verlauf.map(
-      (b): Anthropic.Beta.BetaMessageParam => ({
+      (b): KiNachricht => ({
         role: b.rolle === "begleiter" ? "assistant" : "user",
         content: b.text,
       }),
     ),
   ];
   const a = anweisung(schritt);
-  const erster = await frageClaude(system, [...basis, { role: "system", content: a }]);
+  // Eine Frage ist kurz; die Obergrenze deckt Denk-Tokens ab und begrenzt die Kosten pro Aufruf.
+  const erster = await frageKi({ system, nachrichten, anweisung: a, maxTokens: 4000 });
   if (pruefeFrage(erster)) return { text: erster, korrigiert: false };
-  const zweiter = await frageClaude(system, [
-    ...basis,
-    {
-      role: "system",
-      content: `${a}\n\nKurze Erinnerung an unsere Abmachung: Stelle genau eine Frage, höchstens drei Sätze, keine Lösungen.`,
-    },
-  ]);
+  const zweiter = await frageKi({
+    system,
+    nachrichten,
+    anweisung: `${a}\n\nKurze Erinnerung an unsere Abmachung: Stelle genau eine Frage, höchstens drei Sätze, keine Lösungen.`,
+    maxTokens: 4000,
+  });
   return { text: pruefeFrage(zweiter) ? zweiter : null, korrigiert: true };
 }
