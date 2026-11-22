@@ -18,7 +18,7 @@ import { KURS } from "@/lib/inhalte/kurs";
 
 const INFOS = [
   { Icon: IconNiveau, text: "Einsteiger:innen" },
-  { Icon: IconSanduhr, text: "ca. 65 Min. + 20 Min. Bonus" },
+  { Icon: IconSanduhr, text: "ca. 75 Min. + 20 Min. Bonus" },
   { Icon: IconZertifikat, text: "Teilnahmebestätigung" },
   { Icon: IconSprache, text: "Deutsch" },
   { Icon: IconSprechblase, text: "KI-Lernbegleiter" },

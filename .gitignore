@@ -7,10 +7,9 @@ out/
 next-env.d.ts
 *.tsbuildinfo
 
-# Zugangsdaten – niemals hochladen
-.env
-.env.local
-.env.*.local
+# Zugangsdaten – niemals hochladen (auch Varianten wie .env.local.txt aus dem Windows-Editor)
+.env*
+!.env.example
 
 # Logs
 npm-debug.log*

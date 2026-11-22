@@ -26,7 +26,7 @@ function Einstieg() {
         schluessel="m1:begruendung"
         label="Begründe deine Einschätzung in zwei bis drei Sätzen."
         hilfe="Deine Antwort wird gespeichert und am Ende des Kurses wieder aufgegriffen."
-        mindestens={60}
+        mindestens={30}
       />
     </>
   );
@@ -81,7 +81,7 @@ export const MODUL1: SchrittDef[] = [
     id: "einstieg",
     titel: "Ausgangsthese",
     Inhalt: Einstieg,
-    fertig: (w) => zahl(w, "m1:these") !== null && hatText(w, "m1:begruendung", 60),
+    fertig: (w) => zahl(w, "m1:these") !== null && hatText(w, "m1:begruendung", 30),
   },
   {
     id: "diagnose",

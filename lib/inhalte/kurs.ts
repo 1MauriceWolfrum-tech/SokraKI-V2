@@ -30,7 +30,7 @@ export const KURS = {
   voraussetzungen: [
     "Grundlegende Kenntnisse über KI sind hilfreich, aber nicht erforderlich.",
     "Du brauchst nur einen Browser. Ein KI-Konto ist nicht nötig.",
-    "Plane etwa 65 Minuten ein, mit Bonusmodul etwa 85 Minuten. Du kannst jederzeit unterbrechen.",
+    "Plane etwa 75 Minuten ein, mit Bonusmodul etwa 95 Minuten. Du kannst jederzeit unterbrechen.",
   ],
 };
 
@@ -55,8 +55,8 @@ export const MODULE: ModulMeta[] = [
     id: "m3",
     nummer: "03",
     titel: "KI im BWL- und Mathematikunterricht",
-    kurz: "Zwei Unterrichtsfälle: entscheiden, Chats analysieren, mit Musterlösung vergleichen.",
-    dauer: 15,
+    kurz: "Escape Room mit drei Räumen, dann zwei Unterrichtsfälle: entscheiden, Chats analysieren, mit Musterlösung vergleichen.",
+    dauer: 25,
     lernziel: "Lernziel 2",
   },
   {

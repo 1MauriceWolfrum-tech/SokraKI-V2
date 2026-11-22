@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { KI_MODUS, fehlerHinweis } from "@/lib/ki/client";
-import { claudeFrage } from "@/lib/ki/lernbegleiter";
+import { kiFrage } from "@/lib/ki/lernbegleiter";
 import { naechsterSchritt, skriptFrage, skriptText, startZustand } from "@/lib/lernbegleiter/phasen";
+import { HINWEIS_NUR_LOKAL, kiFuerAnfrageErlaubt, liesJsonAnfrage } from "@/lib/sicherheit";
 import { MAX_BEITRAEGE, MAX_ZEICHEN, type BegleiterAnfrage, type BegleiterAntwort, type KiModus } from "@/lib/typen";
 
 // Einzige Stelle, an der der Lernbegleiter mit dem Sprachmodell spricht.
@@ -34,12 +35,9 @@ function istGueltig(daten: unknown): daten is BegleiterAnfrage {
 }
 
 export async function POST(request: Request) {
-  let daten: unknown;
-  try {
-    daten = await request.json();
-  } catch {
-    return NextResponse.json({ fehler: "Ungültige Anfrage." }, { status: 400 });
-  }
+  const gelesen = await liesJsonAnfrage(request);
+  if ("antwort" in gelesen) return gelesen.antwort;
+  const daten = gelesen.daten;
   if (!istGueltig(daten)) return NextResponse.json({ fehler: "Ungültige Anfrage." }, { status: 400 });
   const { szenario, entscheidung, verlauf, zustand } = daten;
 
@@ -59,9 +57,11 @@ export async function POST(request: Request) {
   let hinweis: string | undefined;
   let text: string | null = null;
 
-  if (modus === "claude" && schritt.art !== "abschluss") {
+  if (modus !== "skript" && schritt.art !== "abschluss" && !kiFuerAnfrageErlaubt(request)) {
+    hinweis = `${HINWEIS_NUR_LOKAL} Der Lernbegleiter folgt dem Leitfaden.`;
+  } else if (modus !== "skript" && schritt.art !== "abschluss") {
     try {
-      const ergebnis = await claudeFrage(szenario, entscheidung, verlauf, schritt);
+      const ergebnis = await kiFrage(szenario, entscheidung, verlauf, schritt);
       text = ergebnis.text;
       if (ergebnis.korrigiert) {
         hinweis = text
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
           : "Die KI-Antwort hielt die Regeln nicht ein; der Gesprächsleitfaden hat übernommen.";
       }
     } catch (fehler) {
-      console.error("Lernbegleiter fehlgeschlagen:", fehler);
+      console.error("Lernbegleiter fehlgeschlagen:", fehler instanceof Error ? fehler.message : fehler);
       hinweis = `${fehlerHinweis(fehler)} Der Lernbegleiter folgt für diese Frage dem Leitfaden.`;
     }
   }

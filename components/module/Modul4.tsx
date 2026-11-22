@@ -211,9 +211,9 @@ function Empfehlung() {
           </ol>
         </details>
       )}
-      <Textantwort schluessel="m4:empfehlung" label={EMPFEHLUNG_FRAGE} hilfe="Zwei bis drei Sätze genügen." mindestens={60} />
+      <Textantwort schluessel="m4:empfehlung" label={EMPFEHLUNG_FRAGE} hilfe="Zwei bis drei Sätze genügen." mindestens={30} />
       {szenario && (
-        <Impuls freigabe={hatText(werte, "m4:empfehlung", 60)} titel="Mit der Musterlösung vergleichen">
+        <Impuls freigabe={hatText(werte, "m4:empfehlung", 30)} titel="Mit der Musterlösung vergleichen">
           <p>
             <strong>Musterlösung:</strong> {MUSTER_EMPFEHLUNG[szenario]}
           </p>
@@ -259,5 +259,5 @@ export const MODUL4: SchrittDef[] = [
   },
   { id: "szenario", titel: "Fall auswählen", Inhalt: SzenarioWahl, fertig: (w) => typeof w["m4:szenario"] === "string" },
   { id: "gespraech", titel: "Gespräch", Inhalt: Gespraech, fertig: gespraechFertig },
-  { id: "empfehlung", titel: "Handlungsempfehlung", Inhalt: Empfehlung, fertig: (w) => hatText(w, "m4:empfehlung", 60) },
+  { id: "empfehlung", titel: "Handlungsempfehlung", Inhalt: Empfehlung, fertig: (w) => hatText(w, "m4:empfehlung", 30) },
 ];
