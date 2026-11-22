@@ -70,7 +70,7 @@ function Reflexion() {
           })}
         </div>
       </fieldset>
-      <Textantwort schluessel="m5:r3" label={TRANSFERFRAGE} hilfe="Zwei bis drei Sätze genügen." mindestens={40} zeilen={3} />
+      <Textantwort schluessel="m5:r3" label={TRANSFERFRAGE} hilfe="Zwei bis drei Sätze genügen." mindestens={20} zeilen={3} />
       <fieldset className="checkliste">
         <legend>Prüfe deine Antworten: Was macht eine gute Begründung aus?</legend>
         {KRITERIEN.map((k, i) => (
@@ -163,7 +163,7 @@ export const MODUL5: SchrittDef[] = [
     id: "reflexion",
     titel: "Reflexion",
     Inhalt: Reflexion,
-    fertig: (w) => hatText(w, "m5:r3", 40),
+    fertig: (w) => hatText(w, "m5:r3", 20),
   },
   { id: "test", titel: "Abschlusstest", Inhalt: Test, fertig: (w) => quizErgebnis(w, ABSCHLUSSTEST, "m5:test").alle },
   {

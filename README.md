@@ -1,7 +1,7 @@
 # KI bildungsgerecht im Unterricht einsetzen – SokraKI V2
 
 **Ein interaktiver Selbstlernkurs für angehende Lehrkräfte an beruflichen Schulen.**
-Prototyp aus dem Seminar *Multimediale Lernumgebungen* (Wirtschaftspädagogik). Bearbeitungsdauer: ca. 65 Minuten, mit Bonusmodul ca. 85 Minuten.
+Prototyp aus dem Seminar *Multimediale Lernumgebungen* (Wirtschaftspädagogik). Bearbeitungsdauer: ca. 75 Minuten, mit Bonusmodul ca. 95 Minuten.
 
 ![Kursseite](docs/screenshots/kursseite.png)
 
@@ -61,7 +61,7 @@ npm run dev
 | --- | --- | --- | --- |
 | 01 | Einstieg & Wissensdiagnose | 8 Min. | Vorwissen aktivieren, Position zur Ausgangsthese |
 | 02 | Bildungsgerechtigkeit im KI-Zeitalter | 18 Min. | Begriffe, was Lehrkräfte über KI wissen sollten (Kernrisiken, Digital Divide, angemessenes Vertrauen), Chancen, Risiken, Zuordnungsquiz |
-| 03 | KI im BWL- und Mathematikunterricht | 15 Min. | Fall A: entscheiden und Begründungen auswählen, Reflexionsquiz. Fall B: zwei Chats nach Merkmalen des sokratischen Dialogs vergleichen, Handlungsempfehlung mit Musterlösung |
+| 03 | KI im BWL- und Mathematikunterricht | 25 Min. | Escape Room „Frau Müllers Schultag“ mit drei Räumen (Digital Divide, sokratischer Tutor, Arbeitsblatt prüfen). Fall A: entscheiden und Begründungen auswählen, Reflexionsquiz. Fall B: zwei Chats nach Merkmalen des sokratischen Dialogs vergleichen, Handlungsempfehlung mit Musterlösung |
 | 04 | Reflektieren mit dem KI-Lernbegleiter | 18 Min. | Was einen sokratischen Dialog ausmacht, Quiz „Sokratisch oder nicht?“, Gespräch in fünf Phasen mit Antwortbausteinen, Musterlösung |
 | 05 | Wissen überprüfen & Transfer | 7 Min. | Erneute Positionierung, Erkenntnisse auswählen, eine Transferfrage, Abschlusstest, Feedback |
 | Bonus | KI-Arbeitsblatt erstellen und prüfen | 20 Min. | Arbeitsblatt sokratisch planen, Prompt mit Chain of Thought, Entwurf prüfen, verbessern und als PDF drucken |
@@ -112,11 +112,16 @@ Alle Texte stehen in `lib/inhalte/` und sind als **Entwurfstexte** markiert. Bit
 | `kurs.ts` | Titel, Überblick, Lernziele, Module, Voraussetzungen |
 | `modul1.ts` | Ausgangsthese, Skala, Wissensdiagnose mit Feedback |
 | `modul2.ts` | Begriffe, drei Lernende, KI-Grundwissen, Kernrisiken, Digital Divide, Vertrauensskala, Chancen, Risiken, Zuordnungsquiz, Literatur |
+| `escaperoom.ts` | Escape Room in Modul 3: Räume mit Szene, Hintergrund, innerer Reflexion, Rätsel und Schlüssel (offen: vierter Raum, KI-Videos zur Auflösung) |
 | `modul3.ts` | Fall A (Angebotsvergleich) mit Begründungsbausteinen und Reflexionsquiz, Fall B (lineare Kostenfunktionen) mit Merkmalsvergleich und Musterlösung |
 | `modul4.ts` | Sokratischer Dialog, Quiz „Sokratisch oder nicht?“, Gesprächsphasen, Regeln, Leitfaden-Fragen, Antwortbausteine, Musterlösungen |
 | `modul5.ts` | Erkenntnisse, Transferfrage, Kriterien einer guten Begründung, Abschlusstest, Feedback |
 | `bonus.ts` | Themen, sokratische Planung, Prompt-Bausteine mit Chain of Thought, vorbereitete Entwürfe, Schwachstellen, Checkliste |
 | `nachschlagen.ts` | Anleitung und Prompt-Vorlagen für den sokratischen Dialog, Chain of Thought, KI-Gerechtigkeitskompass, DigCompEdu, UNESCO |
+
+**Quiz-Antworten:** Die richtige Antwort darf in den Dateien an beliebiger Stelle stehen. Der Kurs zeigt die Antworten jeder Frage in einer festen, gemischten Reihenfolge an (ab drei Antworten), damit nicht immer derselbe Buchstabe richtig ist.
+
+**Farben:** Die Leitfarbe steht in `app/globals.css` unter `--marke` (dazu `--marke-dunkel`, `--marke-zart`). Für die Uni-Farben genügt es, diese drei Werte anzupassen.
 
 Weitere wichtige Dateien: `components/module/` (Lernschritte je Modul und ihre Abschlussbedingungen), `lib/lernbegleiter/phasen.ts` (Gesprächssteuerung), `lib/ki/` (KI-Anbindung über OpenRouter oder Claude API), `lib/arbeitsblatt.ts` (Struktur des Arbeitsblatts), `components/Arbeitsblatt.tsx` (Anzeige, Bearbeitung, Druckfassung), `app/api/` (Schnittstellen), `app/globals.css` (Design).
 
@@ -172,4 +177,4 @@ npm run schutz-aktivieren
 
 ## Technik
 
-Next.js 16, React 19, TypeScript, Anthropic SDK, OpenRouter (per `fetch`, ohne zusätzliche Bibliothek). Design angelehnt an die ruhige Gestaltung etablierter Lernplattformen: viel Weißraum, Violett als Leitfarbe, Pastellakzente.
+Next.js 16, React 19, TypeScript, Anthropic SDK, OpenRouter (per `fetch`, ohne zusätzliche Bibliothek). Design angelehnt an die ruhige Gestaltung etablierter Lernplattformen: viel Weißraum, Blau als Leitfarbe, Pastellakzente.

@@ -104,8 +104,8 @@ function Begriffe() {
 
       {gesehen.length === LERNENDE.length && (
         <>
-          <Textantwort schluessel="m2:zugang" label={GERECHTIGKEITSFRAGE} mindestens={60} />
-          <Impuls freigabe={hatText(werte, "m2:zugang", 60)}>
+          <Textantwort schluessel="m2:zugang" label={GERECHTIGKEITSFRAGE} mindestens={30} />
+          <Impuls freigabe={hatText(werte, "m2:zugang", 30)}>
             <p>{GERECHTIGKEITS_IMPULS}</p>
           </Impuls>
         </>
@@ -366,7 +366,7 @@ export const MODUL2: SchrittDef[] = [
     titel: "Was bedeutet Bildungsgerechtigkeit?",
     Inhalt: Begriffe,
     fertig: (w) =>
-      Array.isArray(w["m2:lernende"]) && (w["m2:lernende"] as string[]).length === LERNENDE.length && hatText(w, "m2:zugang", 60),
+      Array.isArray(w["m2:lernende"]) && (w["m2:lernende"] as string[]).length === LERNENDE.length && hatText(w, "m2:zugang", 30),
   },
   {
     id: "chancen",

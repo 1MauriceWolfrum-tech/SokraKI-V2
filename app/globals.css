@@ -1,18 +1,18 @@
 /* SokraKI V2 – helles, ruhiges Design in Anlehnung an die Gestaltung von Lernplattformen wie KI-Campus:
-   viel Weißraum, Violett als Leitfarbe, Grün als Akzent, Pastellränder, runde Knöpfe. */
+   viel Weißraum, Blau als Leitfarbe (--marke; für Uni-Farben hier anpassen), Grün als Akzent, Pastellränder. */
 
 :root {
-  --violett: #3a2a78;
-  --violett-dunkel: #2a1d5c;
-  --violett-zart: #f2effa;
+  --marke: #1e4f8f;
+  --marke-dunkel: #153a6b;
+  --marke-zart: #ebf2fb;
   --gruen: #35823a;
   --gruen-hell: #17a468;
   --lime: #afd700;
   --lime-zart: #f4f9e2;
   --hellblau: #c2e3f0;
   --hellblau-zart: #eaf4f9;
-  --flieder: #e1c9e8;
-  --flieder-zart: #f7f0f9;
+  --flieder: #d6def5;
+  --flieder-zart: #f3f5fc;
   --lindgruen: #e4eec4;
   --pfirsich: #fbe1c6;
   --risiko: #f2c7c3;
@@ -45,13 +45,13 @@ body {
 }
 
 a {
-  color: var(--violett);
+  color: var(--marke);
 }
 
 h1,
 h2,
 h3 {
-  color: var(--violett);
+  color: var(--marke);
   font-weight: 400;
   line-height: 1.2;
   margin: 0 0 0.6rem;
@@ -98,7 +98,7 @@ ol {
   position: absolute;
   left: -999px;
   top: 0.5rem;
-  background: var(--violett);
+  background: var(--marke);
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 999px;
@@ -153,7 +153,7 @@ ol {
   align-items: center;
   gap: 0.6rem;
   text-decoration: none;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .marke-zeichen {
@@ -162,7 +162,7 @@ ol {
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  background: var(--violett);
+  background: var(--marke);
   color: #fff;
 }
 
@@ -194,7 +194,7 @@ ol {
 }
 
 .kopf-fortschritt {
-  background: var(--violett);
+  background: var(--marke);
   color: #fff;
   border-radius: 999px;
   padding: 0.35rem 0.9rem;
@@ -221,7 +221,7 @@ ol {
 
 /* Held-Bereich */
 .held {
-  background: linear-gradient(120deg, #f2f9fc 0%, #f8f2fa 55%, #f6faec 100%);
+  background: linear-gradient(120deg, #f2f9fc 0%, #eef3fb 55%, #f6faec 100%);
   padding: 2rem 1.25rem 0;
 }
 
@@ -245,7 +245,7 @@ ol {
 }
 
 .held-untertitel {
-  color: var(--violett);
+  color: var(--marke);
   font-size: 1.2rem;
   max-width: 60ch;
 }
@@ -262,7 +262,7 @@ ol {
   gap: 0.4rem;
   font-size: 0.85rem;
   margin-bottom: 0.9rem;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .brotkrumen > * + *::before {
@@ -302,7 +302,7 @@ ol {
 }
 
 .infobox-eintrag svg {
-  color: var(--violett);
+  color: var(--marke);
 }
 
 /* Chips */
@@ -321,8 +321,8 @@ ol {
   padding: 0.18rem 0.75rem;
   font-size: 0.78rem;
   font-weight: 600;
-  background: var(--violett-zart);
-  color: var(--violett-dunkel);
+  background: var(--marke-zart);
+  color: var(--marke-dunkel);
   margin: 0 0 0.6rem;
 }
 
@@ -351,9 +351,9 @@ ol {
   min-height: 46px;
   padding: 0.65rem 1.5rem;
   border-radius: 999px;
-  border: 1.5px solid var(--violett);
+  border: 1.5px solid var(--marke);
   background: #fff;
-  color: var(--violett);
+  color: var(--marke);
   font: inherit;
   font-size: 0.95rem;
   font-weight: 600;
@@ -365,7 +365,7 @@ ol {
 }
 
 .knopf:hover:not(:disabled) {
-  background: var(--violett-zart);
+  background: var(--marke-zart);
 }
 
 .knopf:disabled {
@@ -374,12 +374,12 @@ ol {
 }
 
 .knopf-primaer {
-  background: var(--violett);
+  background: var(--marke);
   color: #fff;
 }
 
 .knopf-primaer:hover:not(:disabled) {
-  background: var(--violett-dunkel);
+  background: var(--marke-dunkel);
 }
 
 .knopf-gross {
@@ -396,7 +396,7 @@ ol {
   background: none;
   border: none;
   padding: 0.3rem 0;
-  color: var(--violett);
+  color: var(--marke);
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
@@ -525,7 +525,7 @@ ol {
   padding: 0 0.5rem;
   border-radius: 16px;
   background: var(--hellblau-zart);
-  color: var(--violett);
+  color: var(--marke);
   font-size: 1.2rem;
   font-weight: 700;
 }
@@ -624,12 +624,12 @@ ol {
   padding: 0.55rem 0.6rem;
   font: inherit;
   font-size: 0.95rem;
-  color: var(--violett);
+  color: var(--marke);
   cursor: pointer;
 }
 
 .schritt-link:hover:not(:disabled) {
-  background: var(--violett-zart);
+  background: var(--marke-zart);
 }
 
 .schritt-link:disabled {
@@ -638,7 +638,7 @@ ol {
 }
 
 .schritt-link.aktiv {
-  background: var(--violett-zart);
+  background: var(--marke-zart);
   font-weight: 700;
 }
 
@@ -744,8 +744,8 @@ ol {
   margin: 1rem 0 1.5rem;
   padding: 1.25rem 1.5rem;
   border-radius: var(--radius);
-  background: var(--violett-zart);
-  color: var(--violett);
+  background: var(--marke-zart);
+  color: var(--marke);
   font-size: 1.3rem;
   line-height: 1.45;
 }
@@ -775,9 +775,9 @@ input[type="text"] {
 
 textarea:focus,
 input[type="text"]:focus {
-  border-color: var(--violett);
+  border-color: var(--marke);
   outline: none;
-  box-shadow: 0 0 0 3px var(--violett-zart);
+  box-shadow: 0 0 0 3px var(--marke-zart);
 }
 
 .feld {
@@ -832,12 +832,12 @@ legend {
 }
 
 .skala-punkt:hover {
-  border-color: var(--violett);
+  border-color: var(--marke);
 }
 
 .skala-punkt[aria-checked="true"] {
-  border-color: var(--violett);
-  background: var(--violett);
+  border-color: var(--marke);
+  background: var(--marke);
   color: #fff;
 }
 
@@ -904,7 +904,7 @@ legend {
 
 .quiz-option:hover:not(:disabled),
 .option-karte:hover {
-  border-color: var(--violett);
+  border-color: var(--marke);
 }
 
 .quiz-option:disabled {
@@ -913,8 +913,8 @@ legend {
 
 .quiz-option[aria-checked="true"],
 .option-karte[aria-checked="true"] {
-  border-color: var(--violett);
-  background: var(--violett-zart);
+  border-color: var(--marke);
+  background: var(--marke-zart);
 }
 
 .quiz-option.richtig {
@@ -937,13 +937,13 @@ legend {
   padding: 0 0.3rem;
   border-radius: 10px;
   background: var(--hellblau-zart);
-  color: var(--violett);
+  color: var(--marke);
   font-weight: 700;
   font-size: 0.9rem;
 }
 
 .option-karte[aria-checked="true"] .option-buchstabe {
-  background: var(--violett);
+  background: var(--marke);
   color: #fff;
 }
 
@@ -977,17 +977,17 @@ legend {
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--violett);
+  color: var(--marke);
   cursor: pointer;
 }
 
 .pille:hover:not(:disabled) {
-  border-color: var(--violett);
+  border-color: var(--marke);
 }
 
 .pille[aria-checked="true"] {
-  background: var(--violett);
-  border-color: var(--violett);
+  background: var(--marke);
+  border-color: var(--marke);
   color: #fff;
 }
 
@@ -1131,7 +1131,7 @@ legend {
   align-items: center;
   gap: 0.4rem;
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 /* Begriffe und Lernende */
@@ -1167,7 +1167,7 @@ legend {
 
 .begriff-name {
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .begriff-kurz {
@@ -1203,8 +1203,8 @@ legend {
 }
 
 .lernende-karte.aktiv {
-  border-color: var(--violett);
-  box-shadow: 0 0 0 3px var(--violett-zart);
+  border-color: var(--marke);
+  box-shadow: 0 0 0 3px var(--marke-zart);
 }
 
 .lernende-avatar {
@@ -1215,7 +1215,7 @@ legend {
   border-radius: 50%;
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .farbe-hellblau .lernende-avatar,
@@ -1238,7 +1238,7 @@ legend {
   align-items: center;
   gap: 0.3rem;
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .lernende-name svg {
@@ -1267,7 +1267,7 @@ legend {
 
 .lernende-detail dt {
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
   margin-top: 0.5rem;
 }
 
@@ -1309,7 +1309,7 @@ caption {
   text-align: left;
   padding: 0.8rem 1rem 0.4rem;
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 th,
@@ -1346,7 +1346,7 @@ thead th {
 
 .chat-auszug figcaption {
   margin-bottom: 0.6rem;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .chat-zeile {
@@ -1365,13 +1365,143 @@ thead th {
 }
 
 .chat-lernend {
-  background: var(--violett-zart);
+  background: var(--marke-zart);
   margin-left: 1.5rem;
 }
 
 .chat-ki {
   background: #f4f5f9;
   margin-right: 1.5rem;
+}
+
+.chat-notiz {
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--text-leise);
+  text-align: center;
+  margin: 0.4rem 0 0;
+}
+
+/* Escape Room (Modul 3) */
+.schluesselbund {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.schluesselbund li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1.5px dashed var(--rand);
+  color: var(--text-leise);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.schluesselbund li.gefunden {
+  border-style: solid;
+  border-color: var(--lime);
+  background: var(--lime-zart);
+  color: var(--gruen);
+}
+
+.raum-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--marke);
+  margin: 0 0 0.3rem;
+}
+
+.raum-szene {
+  border-left: 4px solid var(--marke);
+  padding: 0.2rem 0 0.2rem 1rem;
+  margin: 1rem 0 1.25rem;
+  font-style: italic;
+}
+
+.raum-szene p:last-child {
+  margin-bottom: 0;
+}
+
+.raum-prompt {
+  margin: 0.8rem 0;
+  border: 1px solid var(--hellblau);
+  background: var(--hellblau-zart);
+  border-radius: 14px;
+  padding: 0.7rem 1rem;
+}
+
+.raum-prompt figcaption {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--marke);
+  margin-bottom: 0.3rem;
+}
+
+.raum-prompt blockquote {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.raum-aufgaben {
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.raum-reflexion {
+  margin: 1.25rem 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radius);
+  background: var(--flieder-zart);
+  border: 1px solid var(--flieder);
+}
+
+.raum-reflexion p:last-child {
+  margin-bottom: 0;
+  font-style: italic;
+}
+
+.schluessel-karte {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  margin-top: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--lime);
+  background: var(--lime-zart);
+}
+
+.schluessel-karte p {
+  margin: 0;
+}
+
+.schluessel-symbol {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--gruen);
+}
+
+.schluessel-titel {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--gruen);
 }
 
 /* Lernbegleiter */
@@ -1412,13 +1542,13 @@ thead th {
 }
 
 .phasenleiste .aktuell {
-  color: var(--violett);
+  color: var(--marke);
   font-weight: 700;
 }
 
 .phasenleiste .aktuell .phasen-nr {
-  background: var(--violett);
-  border-color: var(--violett);
+  background: var(--marke);
+  border-color: var(--marke);
   color: #fff;
 }
 
@@ -1447,7 +1577,7 @@ thead th {
   height: 46px;
   border-radius: 50%;
   background: var(--flieder);
-  color: var(--violett);
+  color: var(--marke);
   flex: none;
 }
 
@@ -1485,18 +1615,18 @@ thead th {
 }
 
 .nachricht-begleiter .nachricht-wer {
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .nachricht-teilnehmer {
   align-self: flex-end;
-  background: var(--violett);
+  background: var(--marke);
   color: #fff;
   border-bottom-right-radius: 6px;
 }
 
 .nachricht-teilnehmer .nachricht-wer {
-  color: #d9d3f2;
+  color: #cddcf0;
 }
 
 .tippt span {
@@ -1505,7 +1635,7 @@ thead th {
   height: 7px;
   margin-right: 4px;
   border-radius: 50%;
-  background: var(--violett);
+  background: var(--marke);
   opacity: 0.5;
   animation: tippen 1s ease-in-out infinite;
 }
@@ -1547,7 +1677,7 @@ thead th {
 .aufklapp summary {
   cursor: pointer;
   font-weight: 600;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 /* Modul 1 und 5 */
@@ -1568,7 +1698,7 @@ thead th {
 
 .kennzahl-wert {
   font-size: 2.2rem;
-  color: var(--violett);
+  color: var(--marke);
   line-height: 1.1;
 }
 
@@ -1604,7 +1734,7 @@ thead th {
 }
 
 .vergleich-wert {
-  color: var(--violett);
+  color: var(--marke);
   font-weight: 600;
 }
 
@@ -1626,7 +1756,7 @@ thead th {
   width: 20px;
   height: 20px;
   margin-top: 0.2rem;
-  accent-color: var(--violett);
+  accent-color: var(--marke);
   flex: none;
 }
 
@@ -1642,7 +1772,7 @@ thead th {
   background: var(--flieder-zart);
   padding: 0.6rem 1rem;
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
   font-size: 0.9rem;
 }
 
@@ -1760,8 +1890,8 @@ thead th {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--violett);
-  background: var(--violett-zart);
+  color: var(--marke);
+  background: var(--marke-zart);
   border-radius: 999px;
   padding: 0.1rem 0.6rem;
 }
@@ -1777,9 +1907,9 @@ select {
 }
 
 select:focus {
-  border-color: var(--violett);
+  border-color: var(--marke);
   outline: none;
-  box-shadow: 0 0 0 3px var(--violett-zart);
+  box-shadow: 0 0 0 3px var(--marke-zart);
 }
 
 .editor-block {
@@ -1843,7 +1973,7 @@ select:focus {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem 2rem;
-  border-bottom: 2px solid var(--violett);
+  border-bottom: 2px solid var(--marke);
   padding-bottom: 0.8rem;
 }
 
@@ -1853,7 +1983,7 @@ select:focus {
 
 .druck-fach {
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .druck-zielgruppe {
@@ -1886,7 +2016,7 @@ select:focus {
 
 .druck-titel {
   font-size: 1.6rem;
-  color: var(--violett);
+  color: var(--marke);
   margin: 1.2rem 0 0.6rem;
 }
 
@@ -1954,7 +2084,7 @@ select:focus {
 .druck-niveau {
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--violett);
+  color: var(--marke);
   white-space: nowrap;
 }
 
@@ -2013,11 +2143,11 @@ select:focus {
 /* Teilnahmebestätigung */
 .urkunde {
   margin: 2rem 0;
-  border: 2px solid var(--violett);
+  border: 2px solid var(--marke);
   border-radius: var(--radius);
   padding: 2.5rem 2rem;
   text-align: center;
-  background: linear-gradient(120deg, #f2f9fc 0%, #f8f2fa 55%, #f6faec 100%);
+  background: linear-gradient(120deg, #f2f9fc 0%, #eef3fb 55%, #f6faec 100%);
 }
 
 .urkunde-kopf {
@@ -2029,13 +2159,13 @@ select:focus {
 
 .urkunde-name {
   font-size: 2rem;
-  color: var(--violett);
+  color: var(--marke);
   margin: 0.5rem 0;
 }
 
 .urkunde-titel {
   font-size: 1.3rem;
-  color: var(--violett);
+  color: var(--marke);
   font-weight: 600;
 }
 
@@ -2250,7 +2380,7 @@ select:focus {
   background: var(--hellblau-zart);
   padding: 0.55rem 0.9rem 0.55rem 1rem;
   font-weight: 700;
-  color: var(--violett);
+  color: var(--marke);
   font-size: 0.9rem;
 }
 
@@ -2293,14 +2423,14 @@ select:focus {
 }
 
 .baustein:hover {
-  border-color: var(--violett);
+  border-color: var(--marke);
   border-style: solid;
 }
 
 .baustein[aria-pressed="true"] {
   border-style: solid;
-  border-color: var(--violett);
-  background: var(--violett-zart);
+  border-color: var(--marke);
+  background: var(--marke-zart);
 }
 
 .urteil {
@@ -2351,7 +2481,7 @@ select:focus {
   height: 26px;
   margin-bottom: 0.4rem;
   border-radius: 50%;
-  background: var(--violett);
+  background: var(--marke);
   color: #fff;
   font-weight: 700;
   font-size: 0.8rem;
@@ -2359,7 +2489,7 @@ select:focus {
 
 .prozess strong {
   display: block;
-  color: var(--violett);
+  color: var(--marke);
 }
 
 .vertrauensskala {
@@ -2399,7 +2529,7 @@ select:focus {
 
 .kompass-liste li {
   border: 1px solid var(--rand);
-  border-left: 4px solid var(--violett);
+  border-left: 4px solid var(--marke);
   border-radius: 0 14px 14px 0;
   padding: 0.7rem 1rem;
 }
@@ -2429,7 +2559,7 @@ select:focus {
 }
 
 .inhaltsliste a:hover {
-  border-color: var(--violett);
+  border-color: var(--marke);
 }
 
 .abschnitt {

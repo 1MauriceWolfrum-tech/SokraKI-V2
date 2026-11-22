@@ -43,7 +43,7 @@ export function Textantwort({
   schluessel,
   label,
   hilfe,
-  mindestens = 40,
+  mindestens = 20,
   zeilen = 4,
 }: {
   schluessel: string;
@@ -86,6 +86,22 @@ export function Quiz({ fragen, praefix }: { fragen: QuizFrage[]; praefix: string
   );
 }
 
+// Feste, je Frage gemischte Reihenfolge der Antworten: Die richtige Antwort steht nicht immer an derselben Stelle,
+// bleibt beim Neuladen aber gleich. In den Kursinhalten darf sie daher an beliebiger Stelle stehen; gespeichert wird
+// weiterhin ihr Index aus den Kursinhalten. Bei nur zwei Antworten (z. B. „sokratisch / nicht sokratisch“) bleibt die Reihenfolge.
+export function antwortReihenfolge(id: string, anzahl: number): number[] {
+  const reihe = Array.from({ length: anzahl }, (_, i) => i);
+  if (anzahl < 3) return reihe;
+  let s = 2166136261;
+  for (const zeichen of `${id}·sokraki-6`) s = Math.imul(s ^ zeichen.charCodeAt(0), 16777619) >>> 0;
+  for (let i = anzahl - 1; i > 0; i--) {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    const j = s % (i + 1);
+    [reihe[i], reihe[j]] = [reihe[j], reihe[i]];
+  }
+  return reihe;
+}
+
 function QuizEinzelfrage({ frage, nummer, schluessel }: { frage: QuizFrage; nummer: number; schluessel: string }) {
   const [wahl, setWahl] = useWert<number | null>(schluessel, null);
   const beantwortet = wahl !== null;
@@ -97,7 +113,8 @@ function QuizEinzelfrage({ frage, nummer, schluessel }: { frage: QuizFrage; numm
         {frage.frage}
       </legend>
       <div role="radiogroup" aria-label={frage.frage} className="quiz-optionen">
-        {frage.optionen.map((o, i) => {
+        {antwortReihenfolge(frage.id, frage.optionen.length).map((i, position) => {
+          const o = frage.optionen[i];
           const status = !beantwortet ? "" : o.richtig ? "richtig" : i === wahl ? "falsch" : "";
           return (
             <button
@@ -109,7 +126,7 @@ function QuizEinzelfrage({ frage, nummer, schluessel }: { frage: QuizFrage; numm
               className={`quiz-option ${status}`}
               onClick={() => setWahl(i)}
             >
-              <span className="quiz-buchstabe">{String.fromCharCode(65 + i)}</span>
+              <span className="quiz-buchstabe">{String.fromCharCode(65 + position)}</span>
               <span>{o.text}</span>
             </button>
           );

@@ -483,8 +483,8 @@ function Reflexion() {
   const { werte } = useFortschritt();
   return (
     <>
-      <Textantwort schluessel="bonus:verantwortung" label={VERANTWORTUNGSFRAGE} mindestens={60} />
-      <Impuls freigabe={hatText(werte, "bonus:verantwortung", 60)}>
+      <Textantwort schluessel="bonus:verantwortung" label={VERANTWORTUNGSFRAGE} mindestens={30} />
+      <Impuls freigabe={hatText(werte, "bonus:verantwortung", 30)}>
         <p>{VERANTWORTUNGS_IMPULS}</p>
       </Impuls>
     </>
@@ -521,5 +521,5 @@ export const BONUS: SchrittDef[] = [
     Inhalt: Fertigstellen,
     fertig: (w) => istArbeitsblatt(w["bonus:fassung"]) && w["bonus:geprueft"] === true,
   },
-  { id: "reflexion", titel: "Abschließende Reflexion", Inhalt: Reflexion, fertig: (w) => hatText(w, "bonus:verantwortung", 60) },
+  { id: "reflexion", titel: "Abschließende Reflexion", Inhalt: Reflexion, fertig: (w) => hatText(w, "bonus:verantwortung", 30) },
 ];

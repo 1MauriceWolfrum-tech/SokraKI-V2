@@ -9,6 +9,7 @@ import {
   auswahlGeprueft,
   quizErgebnis,
 } from "@/components/Bausteine";
+import { ESCAPE_SCHRITTE } from "@/components/module/EscapeRoom";
 import type { SchrittDef } from "@/components/module/typen";
 import { hatText, useFortschritt, useWert, zahl } from "@/lib/fortschritt";
 import { FALL_A, FALL_B, type OptionId, type Person } from "@/lib/inhalte/modul3";
@@ -279,10 +280,10 @@ function FallBBewertung() {
         schluessel="m3:b:empfehlung"
         label={FALL_B.empfehlungFrage}
         hilfe="Zwei bis vier Sätze genügen."
-        mindestens={60}
+        mindestens={30}
         zeilen={4}
       />
-      <Impuls freigabe={hatText(werte, "m3:b:empfehlung", 60)} titel="Mit der Musterlösung vergleichen">
+      <Impuls freigabe={hatText(werte, "m3:b:empfehlung", 30)} titel="Mit der Musterlösung vergleichen">
         <p>
           <strong>Musterlösung</strong>
         </p>
@@ -311,6 +312,7 @@ function FallBBewertung() {
 }
 
 export const MODUL3: SchrittDef[] = [
+  ...ESCAPE_SCHRITTE,
   {
     id: "fall-a",
     titel: "Fall A: Entscheidung treffen",
@@ -336,6 +338,6 @@ export const MODUL3: SchrittDef[] = [
     fertig: (w) =>
       zahl(w, "m3:b:bewertung") !== null &&
       quizErgebnis(w, [FALL_B.argument], "m3:b").alle &&
-      hatText(w, "m3:b:empfehlung", 60),
+      hatText(w, "m3:b:empfehlung", 30),
   },
 ];
