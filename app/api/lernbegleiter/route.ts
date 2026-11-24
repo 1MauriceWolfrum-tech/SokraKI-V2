@@ -41,12 +41,13 @@ export async function POST(request: Request) {
   if (!istGueltig(daten)) return NextResponse.json({ fehler: "Ungültige Anfrage." }, { status: 400 });
   const { szenario, entscheidung, verlauf, zustand } = daten;
 
-  // Der Gesprächseinstieg ist immer die feste Frage aus dem Leitfaden.
+  // Der Gesprächseinstieg ist immer die feste Frage aus dem Leitfaden. "modus" gibt an, woher genau diese
+  // Antwort stammt – danach richtet sich die Kennzeichnung „KI-generiert“ oder „Leitfaden“ im Gespräch.
   if (verlauf.length === 0) {
     const antwort: BegleiterAntwort = {
       antwort: skriptFrage(szenario, 1, entscheidung),
       zustand: startZustand(),
-      modus: KI_MODUS,
+      modus: "skript",
     };
     return NextResponse.json(antwort);
   }
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
   }
   if (!text) {
     text = skriptText(szenario, schritt, entscheidung);
-    if (schritt.art !== "abschluss") modus = "skript";
+    modus = "skript";
   }
 
   const antwort: BegleiterAntwort = { antwort: text, zustand: schritt.zustand, modus, hinweis };

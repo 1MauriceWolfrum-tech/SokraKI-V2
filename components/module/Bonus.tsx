@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ArbeitsblattEditor, EntwurfAnsicht } from "@/components/Arbeitsblatt";
 import { Hinweis, Impuls, Kopierfeld, Textantwort } from "@/components/Bausteine";
 import { IconDrucker } from "@/components/Icons";
+import { KiHinweis, KiMarke } from "@/components/KiHinweis";
 import type { SchrittDef } from "@/components/module/typen";
 import { istArbeitsblatt, vollstaendig } from "@/lib/arbeitsblatt";
 import { hatText, text, useFortschritt, useWert } from "@/lib/fortschritt";
@@ -195,6 +196,7 @@ function Generieren() {
       setze("bonus:quelle", daten.modus satisfies KiModus);
       setze("bonus:fassung", daten.blatt);
       setze("bonus:geprueft", false);
+      setze("bonus:ki-ueberarbeitet", false);
       setHinweis(daten.hinweis ?? null);
     } catch {
       setHinweis("Der Entwurf konnte nicht erzeugt werden. Versuche es noch einmal.");
@@ -220,6 +222,7 @@ function Generieren() {
           onChange={(e) => setPrompt(e.target.value)}
         />
       </div>
+      <KiHinweis stelle="entwurf" />
       <div className="impuls-start">
         <button
           type="button"
@@ -385,6 +388,7 @@ function Fertigstellen() {
   const { werte } = useFortschritt();
   const [fassung, setFassung] = useWert<Arbeitsblatt | null>("bonus:fassung", null);
   const [geprueft, setGeprueft] = useWert<boolean>("bonus:geprueft", false);
+  const [kiUeberarbeitet, setKiUeberarbeitet] = useWert<boolean>("bonus:ki-ueberarbeitet", false);
   const [laedt, setLaedt] = useState(false);
   const [meldung, setMeldung] = useState<{ art: "erfolg" | "warnung"; text: string } | null>(null);
 
@@ -413,6 +417,7 @@ function Fertigstellen() {
         return;
       }
       aendern(daten.blatt);
+      setKiUeberarbeitet(true);
       setMeldung({
         art: "erfolg",
         text: "Die KI hat deine Vorschläge eingearbeitet. Prüfe jede Änderung – besonders Zahlen und Lösungen.",
@@ -427,6 +432,7 @@ function Fertigstellen() {
   function zuruecksetzen() {
     if (!window.confirm("Alle Änderungen verwerfen und zum ursprünglichen Entwurf zurückkehren?")) return;
     aendern(entwurf as Arbeitsblatt);
+    setKiUeberarbeitet(false);
     setMeldung(null);
   }
 
@@ -439,6 +445,7 @@ function Fertigstellen() {
           : "Ändere dazu die Felder direkt."}{" "}
         Was hier steht, kommt so auf das Arbeitsblatt.
       </p>
+      {mitKi && <KiHinweis stelle="ueberarbeitung" />}
       {mitKi && (
         <div className="knopfreihe">
           <button
@@ -456,6 +463,12 @@ function Fertigstellen() {
       {meldung && <Hinweis art={meldung.art}>{meldung.text}</Hinweis>}
 
       <div className="abstand-gross">
+        {kiUeberarbeitet && (
+          <p className="ki-vermerk">
+            <KiMarke text="KI-überarbeitet" /> Diese Fassung enthält Änderungen der KI. Prüfe sie, bevor du das
+            Arbeitsblatt verwendest.
+          </p>
+        )}
         <ArbeitsblattEditor blatt={blatt} aendern={aendern} />
       </div>
       <button type="button" className="knopf-text" onClick={zuruecksetzen}>
