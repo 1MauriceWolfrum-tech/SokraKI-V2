@@ -1,6 +1,6 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
-import { OpenRouterFehler, frageOpenRouter } from "@/lib/ki/openrouter";
+import { OPENROUTER_MODELL, OpenRouterFehler, frageOpenRouter } from "@/lib/ki/openrouter";
 import type { KiModus } from "@/lib/typen";
 
 // Gemeinsamer Zugang zur KI. Zugangsdaten kommen aus der Umgebung und verlassen nie den Server –
@@ -11,6 +11,24 @@ export const KI_MODUS: KiModus =
   process.env.KI_MODUS === "openrouter" ? "openrouter" : process.env.KI_MODUS === "claude" ? "claude" : "skript";
 const MODELL = process.env.KI_MODELL || "claude-opus-5-5";
 const EFFORT = (process.env.KI_EFFORT || "low") as "low" | "medium" | "high";
+
+// Für die Kennzeichnung im Kurs: welches Modell auf welchem Weg antwortet. Enthält keine Zugangsdaten.
+export function kiBeschreibung(): { modell: string; weg: string } | null {
+  if (KI_MODUS === "openrouter" && process.env.OPENROUTER_API_KEY?.trim()) {
+    return { modell: modellName(OPENROUTER_MODELL), weg: "über OpenRouter" };
+  }
+  if (KI_MODUS === "claude") return { modell: modellName(MODELL), weg: "direkt über die Claude API" };
+  return null;
+}
+
+// "anthropic/claude-haiku-5.5" → "Claude Haiku 5.5", "claude-opus-5-5" → "Claude Opus 5.5"
+function modellName(id: string): string {
+  return (id.split("/").pop() ?? id)
+    .replace(/-(\d+)-(\d+)$/, " $1.$2")
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
 
 export type KiNachricht = { role: "user" | "assistant"; content: string };
 

@@ -12,6 +12,8 @@ export type ModulMeta = {
   dauer: number;
   lernziel: string;
   optional?: boolean;
+  // Modul enthält eine Stelle, an der eine KI arbeitet (wird im Lernpfad gekennzeichnet).
+  ki?: boolean;
 };
 
 export type QuizFrage = {
@@ -25,10 +27,19 @@ export type Auswahlaussage = { text: string; bewertung: "tragfaehig" | "eingesch
 
 export type KiModus = "skript" | "claude" | "openrouter";
 
+// Für die Kennzeichnung der KI-Stellen: Ist die KI aktiv, und welches Modell antwortet auf welchem Weg?
+export type KiStatus = {
+  aktiv: boolean;
+  modell: string | null;
+  weg: string | null;
+  grund?: "nicht-eingerichtet" | "nur-lokal";
+};
+
 // KI-Lernbegleiter (Modul 4)
 export type SzenarioId = "a" | "b";
 export type Rolle = "begleiter" | "teilnehmer";
-export type Beitrag = { rolle: Rolle; text: string; phase?: number };
+// quelle: Stammt eine Nachricht des Lernbegleiters von der KI oder aus dem Gesprächsleitfaden?
+export type Beitrag = { rolle: Rolle; text: string; phase?: number; quelle?: "ki" | "leitfaden" };
 export type GespraechsZustand = {
   phase: number;
   nachgehakt: boolean;

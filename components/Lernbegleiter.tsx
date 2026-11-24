@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Bausteine, Hinweis } from "@/components/Bausteine";
 import { IconSprechblase } from "@/components/Icons";
+import { KiHinweis, KiMarke } from "@/components/KiHinweis";
 import { useWert } from "@/lib/fortschritt";
 import { PHASEN } from "@/lib/inhalte/modul4";
 import { antwortBausteine, startZustand } from "@/lib/lernbegleiter/phasen";
@@ -12,7 +13,6 @@ import {
   type BegleiterAntwort,
   type Beitrag,
   type GespraechsZustand,
-  type KiModus,
   type SzenarioId,
 } from "@/lib/typen";
 
@@ -23,7 +23,6 @@ export function Lernbegleiter({ szenario, entscheidung }: { szenario: SzenarioId
   const [laedt, setLaedt] = useState(false);
   const [hinweis, setHinweis] = useState<string | null>(null);
   const [fehler, setFehler] = useState<string | null>(null);
-  const [modus, setModus] = useState<KiModus | null>(null);
   const gestartet = useRef(false);
   const ende = useRef<HTMLDivElement>(null);
 
@@ -40,9 +39,16 @@ export function Lernbegleiter({ szenario, entscheidung }: { szenario: SzenarioId
         });
         if (!res.ok) throw new Error(String(res.status));
         const daten = (await res.json()) as BegleiterAntwort;
-        setModus(daten.modus);
         setHinweis(daten.hinweis ?? null);
-        setVerlauf([...bisher, { rolle: "begleiter", text: daten.antwort, phase: daten.zustand.phase }]);
+        setVerlauf([
+          ...bisher,
+          {
+            rolle: "begleiter",
+            text: daten.antwort,
+            phase: daten.zustand.phase,
+            quelle: daten.modus === "skript" ? "leitfaden" : "ki",
+          },
+        ]);
         setZustand(daten.zustand);
       } catch {
         setFehler("Der Lernbegleiter ist gerade nicht erreichbar. Versuche es noch einmal.");
@@ -83,6 +89,7 @@ export function Lernbegleiter({ szenario, entscheidung }: { szenario: SzenarioId
 
   return (
     <section className="begleiter" aria-label="Gespräch mit dem KI-Lernbegleiter">
+      <KiHinweis stelle="lernbegleiter" />
       <ol className="phasenleiste">
         {PHASEN.map((p) => (
           <li
@@ -103,9 +110,8 @@ export function Lernbegleiter({ szenario, entscheidung }: { szenario: SzenarioId
         <div>
           <strong>KI-Lernbegleiter</strong>
           <p className="hilfe">
-            {modus === "claude" || modus === "openrouter"
-              ? "KI-System (Sprachmodell) – kein Mensch. Stellt Fragen, gibt keine Lösungen."
-              : "Folgt eurem Gesprächsleitfaden – kein Mensch. Stellt Fragen, gibt keine Lösungen."}
+            Kein Mensch. Stellt Fragen, gibt keine Lösungen. Jede Frage ist markiert: von der KI formuliert oder aus dem
+            Gesprächsleitfaden.
           </p>
         </div>
       </div>
@@ -113,7 +119,11 @@ export function Lernbegleiter({ szenario, entscheidung }: { szenario: SzenarioId
       <div className="verlauf" aria-live="polite">
         {verlauf.map((b, i) => (
           <div key={i} className={`nachricht nachricht-${b.rolle}`}>
-            <span className="nachricht-wer">{b.rolle === "begleiter" ? "Lernbegleiter" : "Du"}</span>
+            <span className="nachricht-wer">
+              {b.rolle === "begleiter" ? "Lernbegleiter" : "Du"}
+              {b.rolle === "begleiter" && b.quelle === "ki" && <KiMarke text="KI-generiert" />}
+              {b.rolle === "begleiter" && b.quelle === "leitfaden" && <span className="quelle-marke">Leitfaden</span>}
+            </span>
             <p>{b.text}</p>
           </div>
         ))}

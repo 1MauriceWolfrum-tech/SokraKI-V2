@@ -74,6 +74,8 @@ Die Seite **Nachschlagen** (oben in der Navigation) ist jederzeit erreichbar. Si
 
 **Aufgabenteilung zwischen Inhalten und KI:** Wissensvermittlung und Wissensüberprüfung stammen aus den selbst erstellten Kursinhalten. Die KI übernimmt nur zwei klar abgegrenzte Rollen: den Lernbegleiter in Modul 04 und optional das Arbeitsblatt im Bonusmodul.
 
+**Kennzeichnung der KI:** Jede KI-Stelle trägt dieselbe violette KI-Marke. Vor der Nutzung zeigt ein Hinweis, welches Modell dort arbeitet, was es tut und welche Daten gesendet werden – oder dass die KI gerade nicht aktiv ist. Im Gespräch ist jede Frage als „KI-generiert“ oder „Leitfaden“ markiert, ein von der KI überarbeitetes Arbeitsblatt als „KI-überarbeitet“. Die Kursseite listet unter „Wo wird KI eingesetzt?“ alle Stellen auf. Die Texte dazu stehen in `lib/inhalte/ki-transparenz.ts`.
+
 **Vom KI-Entwurf zum PDF (Bonusmodul):** Die KI erstellt einen Entwurf in fester Struktur (Lernziel, Ausgangssituation, Glossar, Aufgaben in drei Niveaus mit Hilfen und Lösungen). Die Lernenden prüfen ihn mit der Checkliste und benennen Schwachstellen mit Verbesserungsvorschlägen. Die KI arbeitet nur diese Vorschläge ein; danach passen die Lernenden die Felder an, bestätigen ihre Prüfung und speichern das Arbeitsblatt über `/arbeitsblatt` als A4-PDF – auf Wunsch mit Lösungsblatt für die Lehrkraft. Ohne KI setzen die Lernenden die Vorschläge selbst um.
 
 ---
@@ -162,6 +164,7 @@ npm run schutz-aktivieren
 | Erreichbarkeit | `npm run dev` ist nur auf dem eigenen Rechner erreichbar. `npm run dev:netzwerk` öffnet die App im WLAN und läuft dann immer ohne KI – der Schlüssel wird in diesem Modus nicht geladen. Zusätzlich nutzen die Schnittstellen die KI nur bei Aufrufen von `localhost`. |
 | Schnittstellen | Nehmen nur JSON von der eigenen Seite an (Schutz vor fremden Webseiten und DNS-Rebinding), begrenzen die Größe auf 128 KB und prüfen Struktur und Länge jeder Anfrage. Antworten werden nicht zwischengespeichert. |
 | Kostenbremse | Höchstens 20 KI-Aufrufe pro Minute und 300 pro Tag (einstellbar), begrenzte Antwortlänge, Höchstpreis pro Modell. Zusätzlich empfohlen: beim OpenRouter-Schlüssel ein Ausgabenlimit setzen. |
+| Transparenz | Alle KI-Stellen sind gekennzeichnet (vgl. Art. 50 KI-Verordnung): Hinweis vor der Nutzung mit Modell und gesendeten Daten, Markierung jeder KI-Antwort, Übersicht auf der Kursseite, Vermerk im PDF. Der Status kommt von `/api/ki-status` (nur Modus und Modellname, keine Zugangsdaten). |
 | Browser | Content Security Policy: Die Seite lädt und sendet nur an die eigene Adresse. Dazu weitere Sicherheits-Header (kein Einbetten in fremde Seiten, kein Referrer, keine Kamera/Mikrofon). |
 
 ## Häufige Probleme

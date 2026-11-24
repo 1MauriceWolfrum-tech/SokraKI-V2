@@ -7,6 +7,7 @@ import type { KiAnfrage } from "@/lib/ki/client";
 
 const MODELL = process.env.OPENROUTER_MODELL || "anthropic/claude-haiku-5.5";
 const EFFORT = process.env.KI_EFFORT || "low";
+export const OPENROUTER_MODELL = MODELL;
 
 // Der Schlüssel darf nur an OpenRouter gehen. Eine lokale Testadresse ist nur in der Entwicklung erlaubt.
 const ERLAUBTE_ADRESSEN = ["https://openrouter.ai/api/v1", "https://eu.openrouter.ai/api/v1", "https://us.openrouter.ai/api/v1"];

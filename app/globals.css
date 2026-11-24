@@ -17,6 +17,10 @@
   --pfirsich: #fbe1c6;
   --risiko: #f2c7c3;
   --risiko-zart: #fdf3f2;
+  /* Kennzeichnung der KI: überall dieselbe Farbe, damit KI-Stellen wiedererkennbar sind */
+  --ki: #6b3fa0;
+  --ki-zart: #f6f1fc;
+  --ki-rand: #ddcdf2;
   --warnung: #b26b00;
   --warnung-zart: #fff6e6;
   --text: #14121f;
@@ -1380,6 +1384,108 @@ thead th {
   color: var(--text-leise);
   text-align: center;
   margin: 0.4rem 0 0;
+}
+
+/* Kennzeichnung der KI */
+.ki-marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--ki);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.nachricht-wer .ki-marke,
+.nachricht-wer .quelle-marke,
+.modul-meta .ki-marke,
+.entwurf figcaption .ki-marke {
+  margin-left: 0.5rem;
+}
+
+.quelle-marke {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--rand);
+  background: #fff;
+  color: var(--text-leise);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+}
+
+.ki-hinweis {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--ki-rand);
+  border-left: 4px solid var(--ki);
+  border-radius: 14px;
+  background: var(--ki-zart);
+}
+
+.ki-hinweis p {
+  margin: 0.35rem 0 0;
+}
+
+.ki-hinweis p.ki-hinweis-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.ki-hinweis-klein {
+  font-size: 0.85rem;
+  color: var(--text-leise);
+}
+
+.ki-hinweis-aus {
+  border-color: var(--rand);
+  border-left-color: var(--text-leise);
+  background: #fafbfd;
+}
+
+.ki-hinweis-aus .ki-marke {
+  background: var(--text-leise);
+}
+
+.ki-liste {
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.ki-status {
+  border-left: 4px solid var(--ki);
+  padding: 0.3rem 0 0.3rem 0.8rem;
+  font-weight: 600;
+}
+
+.ki-status-aus {
+  border-left-color: var(--rand);
+  font-weight: 400;
+}
+
+.ki-vermerk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.8rem;
+  font-size: 0.9rem;
 }
 
 /* Escape Room (Modul 3) */

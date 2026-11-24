@@ -1,5 +1,6 @@
 "use client";
 
+import { KiMarke } from "@/components/KiHinweis";
 import { GRENZEN, NIVEAUS, niveau } from "@/lib/arbeitsblatt";
 import type { Arbeitsblatt, Aufgabe } from "@/lib/typen";
 
@@ -9,7 +10,9 @@ import type { Arbeitsblatt, Aufgabe } from "@/lib/typen";
 export function EntwurfAnsicht({ blatt, quelle }: { blatt: Arbeitsblatt; quelle: string }) {
   return (
     <figure className="entwurf">
-      <figcaption>KI-Entwurf {quelle === "skript" ? "(vorbereiteter Beispielentwurf)" : "(von der KI erzeugt)"}</figcaption>
+      <figcaption>
+        KI-Entwurf {quelle === "skript" ? "(vorbereiteter Beispielentwurf)" : <KiMarke text="von der KI erzeugt" />}
+      </figcaption>
       <div className="entwurf-inhalt">
         <h3>{blatt.titel}</h3>
         {blatt.lernziel && (

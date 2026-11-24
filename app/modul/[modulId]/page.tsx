@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Hinweis } from "@/components/Bausteine";
 import { IconHaken, IconPfeilLinks, IconPfeilRechts, IconSanduhr, IconSchloss } from "@/components/Icons";
+import { KiMarke } from "@/components/KiHinweis";
 import { SCHRITTE, modulFrei } from "@/components/module";
 import { useFortschritt, zahl } from "@/lib/fortschritt";
 import { MODULE, modulMeta } from "@/lib/inhalte/kurs";
@@ -88,6 +89,7 @@ export default function ModulSeite() {
               <IconSanduhr groesse={14} /> {meta.dauer} Min.
             </span>
             <span className="chip chip-flieder">{meta.lernziel}</span>
+            {meta.ki && <KiMarke text="KI im Einsatz" />}
           </div>
           <h1>{meta.titel}</h1>
           <p className="held-untertitel">{meta.kurz}</p>

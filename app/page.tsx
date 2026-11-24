@@ -13,6 +13,7 @@ import {
   IconSprechblase,
   IconZertifikat,
 } from "@/components/Icons";
+import { KiMarke, KiUebersicht } from "@/components/KiHinweis";
 import { useKursstand } from "@/components/module";
 import { KURS } from "@/lib/inhalte/kurs";
 
@@ -29,6 +30,7 @@ const ABSCHNITTE = [
   { id: "ueberblick", titel: "Überblick" },
   { id: "lernziele", titel: "Was werde ich erreichen?" },
   { id: "lernpfad", titel: "Lernpfad" },
+  { id: "ki", titel: "Wo wird KI eingesetzt?" },
   { id: "voraussetzungen", titel: "Welche Voraussetzungen benötige ich?" },
 ];
 
@@ -127,6 +129,7 @@ export default function Kursseite() {
                       <p className="modul-meta">
                         <IconSanduhr groesse={16} /> {m.dauer} Min. · {m.lernziel}
                         {m.optional && " · optional"}
+                        {m.ki && <KiMarke text="mit KI" />}
                       </p>
                       {geladen && m.frei && (
                         <div
@@ -164,6 +167,11 @@ export default function Kursseite() {
                 );
               })}
             </ol>
+          </section>
+
+          <section id="ki">
+            <h2>Wo wird KI eingesetzt?</h2>
+            <KiUebersicht />
           </section>
 
           <section id="voraussetzungen">

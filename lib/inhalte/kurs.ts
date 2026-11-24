@@ -66,6 +66,7 @@ export const MODULE: ModulMeta[] = [
     kurz: "Lerne den sokratischen Dialog kennen und prüfe deine Entscheidung im Gespräch.",
     dauer: 18,
     lernziel: "Lernziel 2",
+    ki: true,
   },
   {
     id: "m5",
@@ -83,6 +84,7 @@ export const MODULE: ModulMeta[] = [
     dauer: 20,
     lernziel: "Lernziel 3",
     optional: true,
+    ki: true,
   },
 ];
 

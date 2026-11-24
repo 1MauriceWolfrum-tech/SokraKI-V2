@@ -55,6 +55,13 @@ export const IconSchloss = (p: IconProps) => (
   </Svg>
 );
 
+export const IconKi = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z" />
+    <path d="M18 13l.9 2.1L21 16l-2.1.9L18 19l-.9-2.1L15 16l2.1-.9z" />
+  </Svg>
+);
+
 export const IconSchluessel = (p: IconProps) => (
   <Svg {...p}>
     <circle cx="8" cy="15" r="4" />
